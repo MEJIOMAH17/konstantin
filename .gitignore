@@ -1,0 +1,13 @@
+# Project exclude paths
+/.gradle/
+/api/build/
+/api/build/classes/kotlin/jvm/main/
+/backend/build/
+/configuration/build/
+/example/.gradle/
+/example/configuration/build/
+/plugin/build/
+/ui/common/build/
+/ui/common/build/classes/kotlin/desktop/main/
+/ui/desktop/build/
+/ui/desktop/build/classes/kotlin/jvm/main/
