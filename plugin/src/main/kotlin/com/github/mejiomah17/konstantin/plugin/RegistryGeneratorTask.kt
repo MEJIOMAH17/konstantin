@@ -13,7 +13,7 @@ open class RegistryGeneratorTask : DefaultTask() {
     @TaskAction
     open fun invoke() {
         val runtimeClasspath = (project.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer)
-            .getByName("main").runtimeClasspath
+            .getByName("jvm").runtimeClasspath
         val urls = runtimeClasspath.files.map {
             it.toURI().toURL()
         }.toTypedArray()
@@ -31,7 +31,7 @@ open class RegistryGeneratorTask : DefaultTask() {
             appendLine("}")
         }
         val packageName = providerClass.java.packageName.replace(".", "/")
-        val generatedDir = File(project.buildDir, "generated/$packageName").also {
+        val generatedDir = File(project.buildDir, "generated/konstantin/src/main/kotlin/$packageName").also {
             it.mkdirs()
         }
         val sourceFile = File(generatedDir, "KonstantinBinding.kt").also {

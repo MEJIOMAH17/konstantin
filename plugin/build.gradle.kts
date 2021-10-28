@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     `kotlin-dsl`
     `maven-publish`
-//    id ("com.github.johnrengelman.shadow") version "7.1.0"
 
 }
 dependencies {
     implementation(project(":api"))
     implementation(project(":configuration"))
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
     implementation("ch.qos.logback:logback-classic:1.2.6")
     testImplementation(kotlin("test"))
 }

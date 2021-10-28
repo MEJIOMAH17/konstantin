@@ -7,6 +7,11 @@ import org.github.mejiomah17.konstantin.configuration.ConfigurationProvider
 class TestConfig : ConfigurationProvider {
 
     override fun createConfiguration(): Configuration = Configuration {
-        Switch("adf", { Thing.Switch.SwitchState.On }, {})
+        Switch(
+            id = "adf",
+            receiveState = {Thing.Switch.SwitchState.On},
+            updateState = {}
+        )
+        Switch("afdf", { Thing.Switch.SwitchState.On }, {})
     }
 }
