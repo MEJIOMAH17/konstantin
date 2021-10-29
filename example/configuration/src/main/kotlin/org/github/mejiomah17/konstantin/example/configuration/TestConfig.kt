@@ -8,7 +8,7 @@ class TestConfig : ConfigurationProvider {
 
     override fun createConfiguration(): Configuration = Configuration {
         Switch(
-            id = "adf",
+            id = "abcfadfafd",
             receiveState = {Thing.Switch.SwitchState.On},
             updateState = {}
         )

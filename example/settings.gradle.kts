@@ -10,5 +10,6 @@ pluginManagement {
 }
 include(
     "configuration",
+    "ui"
 )
 

@@ -13,7 +13,7 @@ open class RegistryGeneratorTask : DefaultTask() {
     @TaskAction
     open fun invoke() {
         val runtimeClasspath = (project.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer)
-            .getByName("jvm").runtimeClasspath
+            .getByName("main").runtimeClasspath
         val urls = runtimeClasspath.files.map {
             it.toURI().toURL()
         }.toTypedArray()
