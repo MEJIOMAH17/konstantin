@@ -5,11 +5,16 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 import java.net.URLClassLoader
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
 
-open class RegistryGeneratorTask : DefaultTask() {
+abstract class RegistryGeneratorTask : DefaultTask() {
+    @get:Input
+    abstract val configurationClass: Property<String>
+
     @TaskAction
     open fun invoke() {
         val runtimeClasspath = (project.extensions.getByName("sourceSets") as org.gradle.api.tasks.SourceSetContainer)
@@ -18,7 +23,7 @@ open class RegistryGeneratorTask : DefaultTask() {
             it.toURI().toURL()
         }.toTypedArray()
         val cl: ClassLoader = URLClassLoader(urls, this::class.java.classLoader)
-        val providerClass = cl.loadClass("org.github.mejiomah17.konstantin.example.configuration.TestConfig").kotlin
+        val providerClass = cl.loadClass(configurationClass.get()).kotlin
         val provider = providerClass.primaryConstructor!!.call() as ConfigurationProvider
         val configuration = provider.createConfiguration()
         val source = buildString {

@@ -9,6 +9,9 @@ plugins {
 
 kotlin {
     jvm()
+    dependencies {
+        commonMainImplementation("org.github.mejiomah17.konstantin:api:1.0")
+    }
     useKonstantinGeneratedSource(project)
 }
 

@@ -16,9 +16,6 @@ fun KotlinMultiplatformExtension.useKonstantinGeneratedSource(
 ) {
     sourceSets {
         val commonMain by getting {
-            dependencies {
-                implementation("org.github.mejiomah17.konstantin:api:1.0")
-            }
             val configurationProject = project.parent!!.childProjects[configurationProjectName]!!
             kotlin.srcDir(File(configurationProject.buildDir, "generated"))
         }

@@ -4,7 +4,9 @@ plugins {
 }
 group = "org.github.mejiomah17.konstantin.example"
 
-
+konstantin {
+    configurationClass.set("org.github.mejiomah17.konstantin.example.configuration.TestConfig")
+}
 
 dependencies {
     implementation("org.github.mejiomah17.konstantin:api:1.0")
