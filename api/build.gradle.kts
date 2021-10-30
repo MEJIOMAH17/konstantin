@@ -3,12 +3,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.5.31"
+    kotlin("plugin.serialization")
     `maven-publish`
 }
 
 dependencies{
-    commonMainImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    commonMainImplementation(com.github.mejiomah17.konstantin.Library.kotlinSerialization)
 }
 
 kotlin {

@@ -12,7 +12,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.github.mejiomah17.konstantin.api.Event
-import org.github.mejiomah17.konstantin.configuration.Configuration
+import com.github.mejiomah17.konstantin.configuration.Configuration
 import org.slf4j.LoggerFactory
 import java.io.Closeable
 import java.time.Duration
@@ -71,10 +71,10 @@ class KonstantinServer(
                 while (true) {
                     runCatching {
                         stateManager.updateState(thing.id, thing.receiveState())
-                        delay(thing.collectTimeout.toMillis())
                     }.onFailure {
                         log.error(it.message)
                     }
+                    delay(thing.collectTimeout.toMillis())
                 }
             }
         }

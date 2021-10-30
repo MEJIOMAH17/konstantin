@@ -3,23 +3,19 @@ buildscript {
     repositories {
         gradlePluginPortal()
         google()
-        mavenCentral()
-        mavenLocal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${com.github.mejiomah17.konstantin.Version.kotlin}")
         classpath("com.android.tools.build:gradle:4.1.2")
     }
 }
 
 
-
-
 allprojects{
     group = "org.github.mejiomah17.konstantin"
-    version = "1.0"
+    version = "0.1.0"
     repositories {
         mavenCentral()
         google()

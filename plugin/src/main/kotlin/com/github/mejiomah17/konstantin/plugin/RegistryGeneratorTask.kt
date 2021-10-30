@@ -1,6 +1,6 @@
 package com.github.mejiomah17.konstantin.plugin
 
-import org.github.mejiomah17.konstantin.configuration.ConfigurationProvider
+import com.github.mejiomah17.konstantin.configuration.ConfigurationProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File

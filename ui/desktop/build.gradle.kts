@@ -6,9 +6,6 @@ plugins {
     id("org.jetbrains.compose") version "1.0.0-alpha3"
 }
 
-group = "org.github.mejiomah17"
-version = "1.0"
-
 kotlin {
     jvm {
         compilations.all {
@@ -19,7 +16,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(project(":ui:common"))
-                implementation("io.ktor:ktor-client-cio:1.6.4")
+                implementation(com.github.mejiomah17.konstantin.Library.ktorClientCio)
                 implementation(compose.desktop.currentOs)
             }
         }

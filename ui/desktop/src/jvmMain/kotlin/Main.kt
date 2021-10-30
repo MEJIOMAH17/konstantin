@@ -1,4 +1,4 @@
-import org.github.mejiomah17.common.App
+import com.github.mejiomah17.common.App
 import androidx.compose.desktop.DesktopMaterialTheme
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application

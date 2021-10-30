@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.github.mejiomah17.konstantin.api.Event
 import org.github.mejiomah17.konstantin.api.Thing
-import org.github.mejiomah17.konstantin.configuration.Configuration
+import com.github.mejiomah17.konstantin.configuration.Configuration
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicReference
