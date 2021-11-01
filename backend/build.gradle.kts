@@ -13,6 +13,8 @@ dependencies {
     implementation(Library.ktorServerWebsockets)
     implementation(Library.kotlinSerialization)
     implementation(Library.logback)
+    testImplementation(project(":client"))
+    testImplementation(Library.junit)
     testImplementation(Library.ktorClientCio)
     testImplementation(Library.ktorClientWebsockets)
     testImplementation(Library.kotest)

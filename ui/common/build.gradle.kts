@@ -18,7 +18,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":api"))
+                implementation(project(":api"))
+                implementation(project(":client"))
                 implementation(Library.ktorClientWebsockets)
                 implementation(Library.kotlinSerialization)
                 api(compose.runtime)
@@ -51,16 +52,16 @@ kotlin {
     }
 }
 
-//
-//android {
-//    compileSdkVersion(29)
-//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-//    defaultConfig {
-//        minSdkVersion(24)
-//        targetSdkVersion(29)
-//    }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
-//    }
-//}
+
+android {
+    compileSdkVersion(29)
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    defaultConfig {
+        minSdkVersion(24)
+        targetSdkVersion(29)
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}

@@ -1,22 +1,33 @@
 package com.github.mejiomah17.konstantin.backend
 
-import io.ktor.application.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.websocket.*
-import kotlinx.coroutines.*
+import com.github.mejiomah17.konstantin.configuration.Configuration
+import io.ktor.application.Application
+import io.ktor.application.install
+import io.ktor.application.log
+import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.readText
+import io.ktor.http.cio.websocket.send
+import io.ktor.request.host
+import io.ktor.routing.routing
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.websocket.WebSockets
+import io.ktor.websocket.webSocket
+import java.io.Closeable
+import java.time.Duration
+import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.github.mejiomah17.konstantin.api.Event
-import com.github.mejiomah17.konstantin.configuration.Configuration
+import org.github.mejiomah17.konstantin.api.Thing
 import org.slf4j.LoggerFactory
-import java.io.Closeable
-import java.time.Duration
-import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
 class KonstantinServer(
@@ -38,6 +49,7 @@ class KonstantinServer(
         routing {
             webSocket("/") {
                 log.info("connected ${call.request.host()}")
+                val subscriptionManager = SubscriptionManager()
                 for (frame in incoming) {
                     frame as? Frame.Text ?: continue
                     val content = frame.readText()
@@ -45,12 +57,16 @@ class KonstantinServer(
                     when (event) {
                         is Event.Subscribe -> {
                             log.info("subscribed ${call.request.host()} $content")
-                            event.thingIds.forEach {
+                            subscriptionManager.subscribe(event.thingIds, this@embeddedServer) {
                                 val channel = stateManager.subscribe(it)
-                                for (thing in channel) {
-                                    send(Json.encodeToString(thing))
+                                for (state in channel) {
+                                    val updateContent =
+                                        Json.encodeToString(Event.StateUpdate(thingId = it, state = state))
+                                    log.info("respond $updateContent to ${call.request.host()}")
+                                    send(updateContent)
                                 }
                             }
+
                         }
                     }
                 }

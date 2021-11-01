@@ -8,5 +8,11 @@ sealed class Event {
     @Serializable
     class Subscribe(
         val thingIds: List<String>
-    ):Event()
+    ) : Event()
+
+    @Serializable
+    class StateUpdate(
+        val thingId: String,
+        val state: State
+    )
 }

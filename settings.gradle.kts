@@ -17,9 +17,10 @@ pluginManagement {
     }
 }
 include(
-    "backend",
-    "configuration",
     "api",
+    "backend",
+    "client",
+    "configuration",
     "plugin",
     "ui:common",
     "ui:desktop",

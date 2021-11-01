@@ -7,6 +7,7 @@ object Version {
 }
 
 object Library {
+    val kotlinCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.kotlin}"
     val kotlinSerialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
     val ktorServerNetty = "io.ktor:ktor-server-netty:${Version.ktor}"
     val ktorServerWebsockets = "io.ktor:ktor-websockets:${Version.ktor}"
@@ -15,5 +16,6 @@ object Library {
     val logback = "ch.qos.logback:logback-classic:1.2.6"
 
 
+    val junit = "org.junit.jupiter:junit-jupiter:5.8.1"
     val kotest = "io.kotest:kotest-assertions-core-jvm:4.6.3"
 }
