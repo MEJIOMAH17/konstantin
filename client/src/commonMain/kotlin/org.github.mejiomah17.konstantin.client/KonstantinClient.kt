@@ -42,6 +42,10 @@ class KonstantinClient(
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
     private val subsciptions = ConcurrentMap<String, Channel<State>>()
 
+    override fun close() {
+        httpClient.close()
+    }
+
     fun start(): Unit {
         scope.async {
             while (true) {
@@ -56,23 +60,6 @@ class KonstantinClient(
         }
     }
 
-    suspend fun clientWork() {
-        httpClient.webSocket(method = HttpMethod.Get, host = host, port = port, request = request, path = path) {
-            async {
-                subscribeNotifyChannel.send(Unit)
-                for (event in subscribeNotifyChannel) {
-                    send(Json.encodeToString(Event.Subscribe(subsciptions.keys.toList()) as Event))
-                }
-            }
-
-            for (frame in incoming) {
-                frame as? Frame.Text ?: continue
-                val receivedText = frame.readText()
-                val stateUpdate = json.decodeFromString<Event.StateUpdate>(receivedText)
-                subsciptions[stateUpdate.thingId]?.send(stateUpdate.state)
-            }
-        }
-    }
 
     fun <S : State> subscribe(
         thing: Thing<S>,
@@ -128,8 +115,24 @@ class KonstantinClient(
         }
     }
 
-    override fun close() {
-        httpClient.close()
+
+    private suspend fun clientWork() {
+        httpClient.webSocket(method = HttpMethod.Get, host = host, port = port, request = request, path = path) {
+            async {
+                subscribeNotifyChannel.send(Unit)
+                for (event in subscribeNotifyChannel) {
+                    send(Json.encodeToString(Event.Subscribe(subsciptions.keys.toList()) as Event))
+                }
+            }
+
+            for (frame in incoming) {
+                frame as? Frame.Text ?: continue
+                val receivedText = frame.readText()
+                val stateUpdate = json.decodeFromString<Event.StateUpdate>(receivedText)
+                subsciptions[stateUpdate.thingId]?.send(stateUpdate.state)
+            }
+        }
     }
+
 
 }
