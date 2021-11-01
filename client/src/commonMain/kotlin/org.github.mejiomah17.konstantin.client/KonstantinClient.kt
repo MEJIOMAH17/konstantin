@@ -47,7 +47,7 @@ class KonstantinClient(
             while (true) {
                 runCatching {
                     clientWork()
-                }.onFailure  {
+                }.onFailure {
                     logger.error(it.toString())
                 }
                 delay(500)
@@ -68,13 +68,8 @@ class KonstantinClient(
             for (frame in incoming) {
                 frame as? Frame.Text ?: continue
                 val receivedText = frame.readText()
-                runCatching {
-                    val stateUpdate = json.decodeFromString<Event.StateUpdate>(receivedText)
-                    subsciptions[stateUpdate.thingId]?.send(stateUpdate.state)
-                }.onFailure {
-                    logger.error(it.toString())
-                    throw it
-                }
+                val stateUpdate = json.decodeFromString<Event.StateUpdate>(receivedText)
+                subsciptions[stateUpdate.thingId]?.send(stateUpdate.state)
             }
         }
     }
