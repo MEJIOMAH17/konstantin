@@ -62,7 +62,7 @@ class KonstantinServer(
                                 for (state in channel) {
                                     val updateContent =
                                         Json.encodeToString(Event.StateUpdate(thingId = it, state = state))
-                                    log.info("respond $updateContent to ${call.request.host()}")
+                                    log.trace("respond $updateContent to ${call.request.host()}")
                                     send(updateContent)
                                 }
                             }
