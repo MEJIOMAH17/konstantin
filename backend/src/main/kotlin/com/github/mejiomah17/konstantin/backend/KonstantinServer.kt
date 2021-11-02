@@ -17,7 +17,6 @@ import java.io.Closeable
 import java.time.Duration
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
@@ -25,8 +24,9 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.github.mejiomah17.konstantin.api.Event
-import org.github.mejiomah17.konstantin.api.Thing
+import org.github.mejiomah17.konstantin.api.ClientEvent
+import org.github.mejiomah17.konstantin.api.ServerEvent
+import org.github.mejiomah17.konstantin.api.State
 import org.slf4j.LoggerFactory
 import kotlin.coroutines.CoroutineContext
 
@@ -41,6 +41,10 @@ class KonstantinServer(
         override val coroutineContext: CoroutineContext =
             (SupervisorJob() + Executors.newFixedThreadPool(backgroundThreadCount).asCoroutineDispatcher())
     }
+    private val thingIdToStateUpdater: Map<String, suspend (State) -> Unit> = configuration.things.map {
+        it.id to it::updateState as suspend (State) -> Unit
+    }.toMap()
+
     val stateManager = StateManager()
     val log = LoggerFactory.getLogger(this::class.java)
 
@@ -53,22 +57,35 @@ class KonstantinServer(
                 for (frame in incoming) {
                     frame as? Frame.Text ?: continue
                     val content = frame.readText()
-                    val event: Event = Json.decodeFromString(content)
-                    when (event) {
-                        is Event.Subscribe -> {
+                    val clientEvent: ClientEvent = Json.decodeFromString(content)
+                    when (clientEvent) {
+                        is ClientEvent.Subscribe -> {
                             log.info("subscribed ${call.request.host()} $content")
-                            subscriptionManager.subscribe(event.thingIds, this@embeddedServer) {
+                            subscriptionManager.subscribe(clientEvent.thingIds, this@embeddedServer) {
                                 val channel = stateManager.subscribe(it)
                                 for (state in channel) {
                                     val updateContent =
-                                        Json.encodeToString(Event.StateUpdate(thingId = it, state = state))
+                                        Json.encodeToString(
+                                            ServerEvent.StateUpdate(
+                                                thingId = it,
+                                                state = state
+                                            ) as ServerEvent
+                                        )
                                     log.trace("respond $updateContent to ${call.request.host()}")
                                     send(updateContent)
                                 }
                             }
-
                         }
-                    }
+                        is ClientEvent.StateUpdate -> {
+                            log.info("update state ${call.request.host()} $content")
+                            //TODO check that state is correct
+                            stateManager.updateState(clientEvent.thingId, clientEvent.state)
+                            runCatching {
+                                thingIdToStateUpdater[clientEvent.thingId]?.invoke(clientEvent.state)
+                            }
+                            Unit
+                        }
+                    }.exhaustive()
                 }
             }
         }
@@ -101,5 +118,9 @@ class KonstantinServer(
             gracePeriodMillis = serverStopGracePeriod.toMillis(),
             timeoutMillis = serverStopTimeoutMillis.toMillis()
         )
+    }
+
+    private fun <T> T.exhaustive(): T {
+        return this
     }
 }

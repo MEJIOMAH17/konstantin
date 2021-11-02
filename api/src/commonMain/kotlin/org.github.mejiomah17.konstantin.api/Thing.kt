@@ -18,11 +18,17 @@ sealed class Thing<T : State> {
     ) : Thing<Switch.SwitchState>() {
         @Serializable
         sealed class SwitchState : State() {
-            @Serializable
-            object On : SwitchState()
+            abstract fun invert(): SwitchState
 
             @Serializable
-            object Off : SwitchState()
+            object On : SwitchState() {
+                override fun invert()  = Off
+            }
+
+            @Serializable
+            object Off : SwitchState(){
+                override fun invert()  = On
+            }
         }
     }
 }

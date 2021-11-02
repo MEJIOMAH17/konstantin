@@ -18,7 +18,8 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.github.mejiomah17.konstantin.api.Event
+import org.github.mejiomah17.konstantin.api.ClientEvent
+import org.github.mejiomah17.konstantin.api.ServerEvent
 import org.github.mejiomah17.konstantin.api.State
 import org.github.mejiomah17.konstantin.api.Thing
 
@@ -39,6 +40,7 @@ class KonstantinClient(
     private val json = Json {
         ignoreUnknownKeys = true
     }
+    private val updateChannel = Channel<Thing<*>>(capacity = Channel.BUFFERED)
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
     private val subsciptions = ConcurrentMap<String, Channel<State>>()
 
@@ -57,6 +59,15 @@ class KonstantinClient(
                 delay(500)
             }
 
+        }
+    }
+
+    /**
+     * sends async message to server for state updating
+     */
+    fun <S : State> updateState(thing: Thing<S>) {
+        scope.async {
+            updateChannel.send(thing)
         }
     }
 
@@ -121,18 +132,26 @@ class KonstantinClient(
             async {
                 subscribeNotifyChannel.send(Unit)
                 for (event in subscribeNotifyChannel) {
-                    send(Json.encodeToString(Event.Subscribe(subsciptions.keys.toList()) as Event))
+                    send(Json.encodeToString(ClientEvent.Subscribe(subsciptions.keys.toList()) as ClientEvent))
                 }
             }
-
+            async {
+                for (event in updateChannel) {
+                    send(Json.encodeToString(ClientEvent.StateUpdate(event.id, event.state) as ClientEvent))
+                }
+            }
             for (frame in incoming) {
                 frame as? Frame.Text ?: continue
                 val receivedText = frame.readText()
-                val stateUpdate = json.decodeFromString<Event.StateUpdate>(receivedText)
-                subsciptions[stateUpdate.thingId]?.send(stateUpdate.state)
+                val event = json.decodeFromString<ServerEvent>(receivedText)
+                when (event) {
+                    is ServerEvent.StateUpdate -> subsciptions[event.thingId]?.send(event.state)
+                }.exhaustive()
             }
         }
     }
 
-
+    private fun <T> T.exhaustive(): T {
+        return this
+    }
 }

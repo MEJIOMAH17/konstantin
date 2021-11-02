@@ -104,10 +104,47 @@ class KonstantinServerTest {
                 state = Thing.Switch.SwitchState.On
                 kotlin.runCatching {
                     withTimeout(1000) {
-                        while (!channel.isClosedForReceive){
+                        while (!channel.isClosedForReceive) {
                             // do nothing
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `server should call update state when client updates state`(): Unit = runBlocking {
+
+        var state: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
+
+        val config = Configuration {
+            Switch(
+                id = "superSwitch",
+                receiveState = {
+                    state
+                },
+                updateState = {
+                    state = it
+                },
+                stateCollectTimeout = Duration.ofMillis(30)
+            )
+        }
+
+        KonstantinServer(config).use {
+            it.start(wait = false)
+            KonstantinClient(
+                host = "127.0.0.1",
+                port = 8080
+            ).use {
+                it.start()
+                val channel = it.subscribe(Thing.Switch("superSwitch"))
+                withTimeout(1000) {
+                    channel.receive() shouldBe Thing.Switch.SwitchState.On
+                }
+                it.updateState(Thing.Switch("superSwitch",Thing.Switch.SwitchState.Off))
+                withTimeout(100) {
+                    channel.receive() shouldBe Thing.Switch.SwitchState.Off
                 }
             }
         }

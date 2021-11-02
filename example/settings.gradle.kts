@@ -10,6 +10,8 @@ pluginManagement {
 }
 include(
     "configuration",
-    "ui"
+    "server",
+    "ui:common",
+    "ui:desktop"
 )
 

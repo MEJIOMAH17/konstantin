@@ -7,7 +7,7 @@ object Version {
 }
 
 object Library {
-    val kotlinCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.kotlin}"
+    val kotlinCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
     val kotlinSerialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0"
     val ktorServerNetty = "io.ktor:ktor-server-netty:${Version.ktor}"
     val ktorServerWebsockets = "io.ktor:ktor-websockets:${Version.ktor}"

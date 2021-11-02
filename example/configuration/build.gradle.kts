@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.5.21"
-    id("org.github.mejiomah17.konstantin") version "1.0"
+    id("org.github.mejiomah17.konstantin") version "0.1.0"
 }
 group = "org.github.mejiomah17.konstantin.example"
 
@@ -9,7 +9,7 @@ konstantin {
 }
 
 dependencies {
-    implementation("org.github.mejiomah17.konstantin:api:1.0")
-    implementation("org.github.mejiomah17.konstantin:configuration:1.0")
+    implementation("org.github.mejiomah17.konstantin:api:0.1.0")
+    implementation("org.github.mejiomah17.konstantin:configuration:0.1.0")
     implementation("ch.qos.logback:logback-classic:1.2.6")
 }
