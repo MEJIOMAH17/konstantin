@@ -1,6 +1,7 @@
 package com.github.mejiomah17.konstantin.backend
 
 import com.github.mejiomah17.konstantin.configuration.Configuration
+import com.github.mejiomah17.konstantin.configuration.ThingAdapter
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.application.log
@@ -20,7 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -41,9 +41,10 @@ class KonstantinServer(
         override val coroutineContext: CoroutineContext =
             (SupervisorJob() + Executors.newFixedThreadPool(backgroundThreadCount).asCoroutineDispatcher())
     }
-    private val thingIdToStateUpdater: Map<String, suspend (State) -> Unit> = configuration.things.map {
-        it.id to it::updateState as suspend (State) -> Unit
+    private val thingIdToStateUpdater: Map<String, ThingAdapter<State>> = configuration.things.map { thingAdapter ->
+        thingAdapter.id to thingAdapter as ThingAdapter<State>
     }.toMap()
+
 
     val stateManager = StateManager()
     val log = LoggerFactory.getLogger(this::class.java)
@@ -79,9 +80,15 @@ class KonstantinServer(
                         is ClientEvent.StateUpdate -> {
                             log.info("update state ${call.request.host()} $content")
                             //TODO check that state is correct
-                            stateManager.updateState(clientEvent.thingId, clientEvent.state)
-                            runCatching {
-                                thingIdToStateUpdater[clientEvent.thingId]?.invoke(clientEvent.state)
+                            async {
+                                stateManager.updateState(clientEvent.thingId, clientEvent.state)
+                            }
+                            async {
+                                runCatching {
+                                    thingIdToStateUpdater[clientEvent.thingId]?.updateState(clientEvent.state)
+                                }.onFailure {
+                                    log.error(it.toString())
+                                }
                             }
                             Unit
                         }
@@ -101,13 +108,13 @@ class KonstantinServer(
     private fun startCollectors() {
         configuration.things.forEach { thing ->
             backendScope.async {
-                while (true) {
+                val stateChannel = thing.stateChannel().invoke(backendScope)
+                for (state in stateChannel) {
                     runCatching {
-                        stateManager.updateState(thing.id, thing.receiveState())
+                        stateManager.updateState(thing.id, state)
                     }.onFailure {
                         log.error(it.message)
                     }
-                    delay(thing.collectTimeout.toMillis())
                 }
             }
         }

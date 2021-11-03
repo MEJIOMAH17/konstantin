@@ -21,21 +21,19 @@ class KonstantinServerTest {
                 id = "superSwitch",
                 receiveState = {
                     state
-                },
+                }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
 
                 },
-                stateCollectTimeout = Duration.ofMillis(30)
             )
             Switch(
                 id = "superSwitch2",
                 receiveState = {
                     state
-                },
+                }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
 
                 },
-                stateCollectTimeout = Duration.ofMillis(30)
             )
         }
 
@@ -77,11 +75,10 @@ class KonstantinServerTest {
                 id = "superSwitch",
                 receiveState = {
                     state
-                },
+                }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
 
                 },
-                stateCollectTimeout = Duration.ofMillis(30)
             )
         }
 
@@ -123,11 +120,10 @@ class KonstantinServerTest {
                 id = "superSwitch",
                 receiveState = {
                     state
-                },
+                }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
                     state = it
                 },
-                stateCollectTimeout = Duration.ofMillis(30)
             )
         }
 

@@ -21,7 +21,7 @@ fun KotlinMultiplatformExtension.useKonstantinGeneratedSource(
         }
     }
 
-    kotlin.runCatching { project.tasks.getByName("jvmMainClasses") }.onSuccess {
+    kotlin.runCatching { project.tasks.getByName("compileKotlinJvm") }.onSuccess {
         it.dependsOn(":configuration:konstantinGenerateSource")
     }
 

@@ -10,10 +10,11 @@ plugins {
 
 dependencies{
     commonMainImplementation(project(":api"))
-    commonMainImplementation(Library.kotlinSerialization)
     commonMainImplementation(Library.kotlinCoroutines)
     commonMainImplementation(Library.ktorClientCio)
     commonMainImplementation(Library.ktorClientWebsockets)
+    commonMainImplementation(Library.kotlinSerialization)
+    commonMainImplementation(Library.logger)
 }
 
 kotlin {

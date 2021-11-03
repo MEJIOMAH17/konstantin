@@ -17,6 +17,7 @@ kotlin {
             dependencies {
                 implementation(project(":ui:common"))
                 implementation(compose.desktop.currentOs)
+                implementation("ch.qos.logback:logback-classic:1.2.6")
             }
         }
         val jvmTest by getting

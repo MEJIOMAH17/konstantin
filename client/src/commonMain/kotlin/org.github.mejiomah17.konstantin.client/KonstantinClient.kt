@@ -18,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import mu.KotlinLogging.logger
 import org.github.mejiomah17.konstantin.api.ClientEvent
 import org.github.mejiomah17.konstantin.api.ServerEvent
 import org.github.mejiomah17.konstantin.api.State
@@ -27,7 +28,6 @@ import org.github.mejiomah17.konstantin.api.Thing
 class KonstantinClient(
     private val host: String,
     private val port: Int,
-    private val logger: Logger = StdOutLogger,
     private val request: HttpRequestBuilder.() -> Unit = {},
     private val path: String = "/",
     httpClientHook: HttpClientConfig<CIOEngineConfig>.() -> Unit = {},
@@ -40,6 +40,7 @@ class KonstantinClient(
     private val json = Json {
         ignoreUnknownKeys = true
     }
+    private val log = logger {}
     private val updateChannel = Channel<Thing<*>>(capacity = Channel.BUFFERED)
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
     private val subsciptions = ConcurrentMap<String, Channel<State>>()
@@ -54,7 +55,9 @@ class KonstantinClient(
                 runCatching {
                     clientWork()
                 }.onFailure {
-                    logger.error(it.toString())
+                    log.error(it) {
+                        "exception while client work"
+                    }
                 }
                 delay(500)
             }

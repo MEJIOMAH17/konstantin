@@ -16,9 +16,9 @@ class TestConfig : ConfigurationProvider {
                     Thing.Switch.SwitchState.Off -> Thing.Switch.SwitchState.On
                 }
                 state
-            },
+            }.toStateChanelFactory(),
             updateState = {}
         )
-        Switch("afdf", { Thing.Switch.SwitchState.On }, {})
+        Switch("afdf", { Thing.Switch.SwitchState.On }.toStateChanelFactory(), {})
     }
 }

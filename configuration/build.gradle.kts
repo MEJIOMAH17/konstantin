@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.mejiomah17.konstantin.Library
 
 plugins {
     kotlin("jvm")
@@ -7,6 +8,8 @@ plugins {
 
 dependencies {
     implementation(project(":api"))
+    implementation(Library.kotlinCoroutines)
+    implementation(Library.logger)
 }
 
 
@@ -26,3 +29,4 @@ kotlin{
         }
     }
 }
+val compileKotlin: KotlinCompile by tasks
