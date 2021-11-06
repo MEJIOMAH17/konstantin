@@ -1,7 +1,7 @@
 package com.github.mejiomah17.konstantin
 
 object Version {
-    val kotlin = "1.5.21"
+    val kotlin = "1.5.31"
     val ktor = "1.6.4"
 
 }

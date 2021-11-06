@@ -1,4 +1,5 @@
 rootProject.name = "konstantin"
+
 pluginManagement {
     repositories {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
@@ -11,6 +12,7 @@ pluginManagement {
 include(
     "configuration",
     "server",
+    "ui:android",
     "ui:common",
     "ui:desktop"
 )

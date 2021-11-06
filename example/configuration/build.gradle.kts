@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.5.21"
-    id("org.github.mejiomah17.konstantin") version "0.1.0"
+    kotlin("jvm")
+    id("org.github.mejiomah17.konstantin")
 }
 group = "org.github.mejiomah17.konstantin.example"
 
