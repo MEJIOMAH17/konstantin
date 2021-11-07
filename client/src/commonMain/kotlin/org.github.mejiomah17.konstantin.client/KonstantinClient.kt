@@ -13,6 +13,7 @@ import io.ktor.http.cio.websocket.readText
 import io.ktor.http.cio.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.serialization.decodeFromString
@@ -32,7 +33,7 @@ class KonstantinClient(
     private val path: String = "/",
     httpClientHook: HttpClientConfig<CIOEngineConfig>.() -> Unit = {},
     private val scope: CoroutineScope = DefaultClientScope
-)  {
+) {
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(WebSockets)
         httpClientHook()
@@ -43,7 +44,7 @@ class KonstantinClient(
     private val log = logger {}
     private val updateChannel = Channel<Thing<*>>(capacity = Channel.BUFFERED)
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
-    private val subsciptions = ConcurrentMap<String, Channel<State>>()
+    private val subsciptions = ConcurrentMap<String, BroadcastChannel<State>>()
 
     fun close() {
         httpClient.close()
@@ -77,30 +78,30 @@ class KonstantinClient(
 
     fun <S : State> subscribe(
         thing: Thing<S>,
-        channelFactory: (String) -> Channel<S> = { Channel(capacity = Channel.CONFLATED) }
+        channelFactory: (String) ->BroadcastChannel<S> = { BroadcastChannel(capacity = Channel.CONFLATED) }
     ): Channel<S> {
         val channel = subsciptions.computeIfAbsent(thing.id) {
-            channelFactory(it) as Channel<State>
+            channelFactory(it) as BroadcastChannel<State>
         }
         scope.async {
             subscribeNotifyChannel.send(Unit)
         }
-        return channel as Channel<S>
+        return channel.openSubscription() as Channel<S>
     }
 
     fun <S : State> subscribe(
         things: List<Thing<S>>,
-        channelFactory: (String) -> Channel<S> = { Channel(capacity = Channel.CONFLATED) }
+        channelFactory: (String) -> BroadcastChannel<S> = { BroadcastChannel(capacity = Channel.CONFLATED) }
     ): Map<Thing<S>, Channel<S>> {
-        val result: Map<Thing<S>, Channel<State>> = things.associateWith { thing ->
+        val result: Map<Thing<S>, BroadcastChannel<State>> = things.associateWith { thing ->
             subsciptions.computeIfAbsent(thing.id) {
-                channelFactory(it) as Channel<State>
+                channelFactory(it) as BroadcastChannel<State>
             }
         }
         scope.async {
             subscribeNotifyChannel.send(Unit)
         }
-        return result as Map<Thing<S>, Channel<S>>
+        return result.mapValues { (_, v) -> v.openSubscription() } as Map<Thing<S>, Channel<S>>
     }
 
 
