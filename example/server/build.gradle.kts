@@ -10,6 +10,7 @@ dependencies {
     implementation("org.github.mejiomah17.konstantin:api:0.1.0")
     implementation("org.github.mejiomah17.konstantin:backend:0.1.0")
     implementation("org.github.mejiomah17.konstantin:configuration:0.1.0")
+    implementation("io.ktor:ktor-server-netty:1.6.4")
     implementation("ch.qos.logback:logback-classic:1.2.6")
 }
 

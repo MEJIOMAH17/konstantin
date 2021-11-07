@@ -14,6 +14,7 @@ include(
     "server",
     "ui:android",
     "ui:common",
-    "ui:desktop"
+    "ui:desktop",
+    "ui:web"
 )
 
