@@ -2,9 +2,9 @@ import com.github.mejiomah17.konstantin.plugin.useKonstantinGeneratedSource
 import org.jetbrains.compose.compose
 
 plugins {
-    kotlin("multiplatform") version "1.5.21"
-    id("org.github.mejiomah17.konstantin") version "0.1.0"
-    id("org.jetbrains.compose") version "1.0.0-alpha3"
+    kotlin("multiplatform")
+    id("org.github.mejiomah17.konstantin")
+    id("org.jetbrains.compose") version  "1.0.0-beta5"
     `maven-publish`
 }
 

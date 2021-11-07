@@ -1,12 +1,12 @@
 rootProject.name = "konstantin"
 pluginManagement {
     plugins {
-        kotlin("multiplatform") version "1.5.21"
-        kotlin("jvm") version "1.5.21"
+        kotlin("multiplatform") version "1.5.31"
+        kotlin("jvm") version "1.5.31"
         kotlin("plugin.serialization") version "1.5.31"
 
         id("com.android.library") version "7.0.3"
-        id("kotlin-android-extensions") version "1.5.21"
+        id("kotlin-android-extensions") version "1.5.31"
     }
     repositories {
         google()

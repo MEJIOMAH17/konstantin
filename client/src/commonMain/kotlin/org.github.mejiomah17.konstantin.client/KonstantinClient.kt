@@ -32,7 +32,7 @@ class KonstantinClient(
     private val path: String = "/",
     httpClientHook: HttpClientConfig<CIOEngineConfig>.() -> Unit = {},
     private val scope: CoroutineScope = DefaultClientScope
-) : io.ktor.utils.io.core.Closeable {
+)  {
     private val httpClient: HttpClient = HttpClient(CIO) {
         install(WebSockets)
         httpClientHook()
@@ -45,7 +45,7 @@ class KonstantinClient(
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
     private val subsciptions = ConcurrentMap<String, Channel<State>>()
 
-    override fun close() {
+    fun close() {
         httpClient.close()
     }
 

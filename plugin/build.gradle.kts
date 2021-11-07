@@ -11,6 +11,10 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:${com.github.mejiomah17.konstantin.Version.kotlin}")
 }
 
+tasks.withType<KotlinCompile>() {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 tasks.test {
     useJUnitPlatform()
 }
