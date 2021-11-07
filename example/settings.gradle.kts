@@ -15,6 +15,5 @@ include(
     "ui:android",
     "ui:common",
     "ui:desktop",
-    "ui:web"
 )
 

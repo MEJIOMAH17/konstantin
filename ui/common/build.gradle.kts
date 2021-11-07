@@ -28,6 +28,9 @@ plugins {
 }
 kotlin {
     jvm()
+    js(IR){
+        browser()
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -36,8 +39,9 @@ kotlin {
                 implementation(Library.ktorClientWebsockets)
                 implementation(Library.kotlinSerialization)
                 api(compose.runtime)
-                api(compose.foundation)
-                api(compose.material)
+                api(compose.web.core)
+//                api(compose.foundation)
+//                api(compose.material)
             }
             kotlin.srcDir(File(project.projectDir, "src/generated"))
         }

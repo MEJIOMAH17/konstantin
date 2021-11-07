@@ -12,6 +12,7 @@ object Library {
     val ktorServerNetty = "io.ktor:ktor-server-netty:${Version.ktor}"
     val ktorServerWebsockets = "io.ktor:ktor-websockets:${Version.ktor}"
     val ktorClientWebsockets = "io.ktor:ktor-client-websockets:${Version.ktor}"
+    val ktorClientCore = "io.ktor:ktor-client-core:${Version.ktor}"
     val ktorClientCio = "io.ktor:ktor-client-cio:${Version.ktor}"
     val logger = "io.github.microutils:kotlin-logging:2.0.11"
     val logback = "ch.qos.logback:logback-classic:1.2.6"

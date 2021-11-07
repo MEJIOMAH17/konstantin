@@ -13,6 +13,9 @@ dependencies{
 
 kotlin {
     jvm()
+    js(IR){
+        browser()
+    }
     val publicationsFromMainHost =
         listOf(jvm()).map { it.name } + "kotlinMultiplatform"
     publishing {

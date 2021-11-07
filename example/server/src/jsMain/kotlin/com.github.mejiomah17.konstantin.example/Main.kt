@@ -5,6 +5,6 @@ import org.jetbrains.compose.web.renderComposable
 
 fun main(){
     renderComposable("root"){
-        Text("sdfg")
+        Text("adsf4325243")
     }
 }

@@ -11,7 +11,7 @@ plugins {
 dependencies{
     commonMainImplementation(project(":api"))
     commonMainImplementation(Library.kotlinCoroutines)
-    commonMainImplementation(Library.ktorClientCio)
+    commonMainImplementation(Library.ktorClientCore)
     commonMainImplementation(Library.ktorClientWebsockets)
     commonMainImplementation(Library.kotlinSerialization)
     commonMainImplementation(Library.logger)
@@ -19,6 +19,9 @@ dependencies{
 
 kotlin {
     jvm()
+    js(IR){
+        browser()
+    }
     val publicationsFromMainHost =
         listOf(jvm()).map { it.name } + "kotlinMultiplatform"
     publishing {

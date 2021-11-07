@@ -2,8 +2,6 @@ package org.github.mejiomah17.konstantin.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.client.features.websocket.webSocket
 import io.ktor.client.request.HttpRequestBuilder
@@ -30,10 +28,10 @@ class KonstantinClient(
     private val port: Int,
     private val request: HttpRequestBuilder.() -> Unit = {},
     private val path: String = "/",
-    httpClientHook: HttpClientConfig<CIOEngineConfig>.() -> Unit = {},
+    httpClientHook: HttpClientConfig<*>.() -> Unit = {},
     private val scope: CoroutineScope = DefaultClientScope
 )  {
-    private val httpClient: HttpClient = HttpClient(CIO) {
+    private val httpClient: HttpClient = HttpClient {
         install(WebSockets)
         httpClientHook()
     }
