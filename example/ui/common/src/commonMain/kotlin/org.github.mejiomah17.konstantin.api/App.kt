@@ -7,7 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.github.mejiomah17.common.SwitchButton
+import com.github.mejiomah17.common.switch.MultiSwitchButton
+import com.github.mejiomah17.common.switch.SwitchButton
 import kotlinx.coroutines.GlobalScope
 import org.github.mejiomah17.konstantin.client.KonstantinClient
 
@@ -24,8 +25,6 @@ fun App() {
         colors = MaterialTheme.colors.copy(primary = Color.White)
     ) {
         BoxWithConstraints() {
-            val boxWithConstraintsScope = this
-            println(boxWithConstraintsScope.maxWidth)
             Column {
                 SwitchButton(
                     client = konstantinClient,
@@ -37,28 +36,14 @@ fun App() {
                 SwitchButton(
                     client = konstantinClient,
                     name = "My switch2kjljlkjlkjlkjlkjlkj",
-                    switch = Registry.superSwitch,
+                    switch = Registry.superSwitch2,
                     scope = GlobalScope,
                     modifier = Modifier.weight(1f)
                 )
-                SwitchButton(
+                MultiSwitchButton(
                     client = konstantinClient,
-                    name = "My switch3",
-                    switch = Registry.superSwitch,
-                    scope = GlobalScope,
-                    modifier = Modifier.weight(1f)
-                )
-                SwitchButton(
-                    client = konstantinClient,
-                    name = "My switch4",
-                    switch = Registry.superSwitch,
-                    scope = GlobalScope,
-                    modifier = Modifier.weight(1f)
-                )
-                SwitchButton(
-                    client = konstantinClient,
-                    name = "My switch5",
-                    switch = Registry.superSwitch,
+                    name = "common",
+                    switches = listOf(Registry.superSwitch,Registry.superSwitch2),
                     scope = GlobalScope,
                     modifier = Modifier.weight(1f)
                 )

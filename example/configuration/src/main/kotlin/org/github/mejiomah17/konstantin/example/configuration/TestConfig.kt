@@ -9,17 +9,22 @@ class TestConfig : ConfigurationProvider {
 
     override fun createConfiguration(): Configuration = Configuration {
         var state: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
+        var state2: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
         Switch(
             id = "superSwitch",
             receiveState = {
-                state = when (state) {
-                    Thing.Switch.SwitchState.On -> Thing.Switch.SwitchState.Off
-                    Thing.Switch.SwitchState.Off -> Thing.Switch.SwitchState.On
-                }
+                state = state.invert()
                 state
-            }.toStateChanelFactory(Duration.ofSeconds(10)),
+            }.toStateChanelFactory(Duration.ofSeconds(1000)),
             updateState = {}
         )
-        Switch("afdf", { Thing.Switch.SwitchState.On }.toStateChanelFactory(), {})
+        Switch(
+            id = "superSwitch2",
+            receiveState = {
+                state = state.invert()
+                state
+            }.toStateChanelFactory(Duration.ofSeconds(1000)),
+            updateState = {}
+        )
     }
 }

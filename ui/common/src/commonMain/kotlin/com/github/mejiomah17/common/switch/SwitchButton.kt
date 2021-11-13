@@ -1,4 +1,4 @@
-package com.github.mejiomah17.common
+package com.github.mejiomah17.common.switch
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.mejiomah17.common.KonstantinColors
 import com.github.mejiomah17.konstantin.icons.KonstantinIcons
 import com.github.mejiomah17.konstantin.icons.konstantinicons.Lightbulb
 import kotlinx.coroutines.CoroutineScope
@@ -35,44 +37,58 @@ fun SwitchButton(
     modifier: Modifier = Modifier
 ) {
     val updateChannel = client.subscribe(switch)
-    val switchState = mutableStateOf(switch)
-    val uiSwitch: Thing.Switch by remember { switchState }
+    val switchState: MutableState<Thing.Switch.SwitchState> = mutableStateOf(switch.state)
+
+    SwitchButton(
+        name = name,
+        onColor = onColor,
+        offColor = offColor,
+        switchState = switchState,
+        onClick = { client.updateState(switch.copy(state = switchState.value.invert())) },
+        modifier = modifier
+    )
+    scope.async {
+        for (update in updateChannel) {
+            switchState.value = update
+        }
+    }
+}
+
+@Composable
+internal fun SwitchButton(
+    name: String,
+    onColor: Color,
+    offColor: Color,
+    switchState: MutableState<Thing.Switch.SwitchState>,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    val uiSwitch: Thing.Switch.SwitchState by remember { switchState }
     Button(
-        onClick = {
-            client.updateState(uiSwitch.copy(state = uiSwitch.state.invert()))
-        },
+        onClick = onClick,
         modifier = modifier
     ) {
-        BoxWithConstraints() {
+        BoxWithConstraints {
             val boxWithConstraintsScope = this
             Column(modifier = Modifier.fillMaxSize()) {
+                val imageFraction = 0.80f
                 Image(
                     imageVector = KonstantinIcons.Lightbulb,
                     "",
-                    colorFilter = when (uiSwitch.state) {
-                        Thing.Switch.SwitchState.Off -> ColorFilter.tint(color = onColor)
-                        Thing.Switch.SwitchState.On -> ColorFilter.tint(color = offColor)
+                    colorFilter = when (uiSwitch) {
+                        Thing.Switch.SwitchState.Off -> ColorFilter.tint(color = offColor)
+                        Thing.Switch.SwitchState.On -> ColorFilter.tint(color = onColor)
                     },
-                    modifier = Modifier.fillMaxSize(0.80f).align(Alignment.CenterHorizontally)
+                    modifier = Modifier.fillMaxSize(imageFraction).align(Alignment.CenterHorizontally)
                 )
-                val textSize = 20
-                if (
-                    boxWithConstraintsScope.maxHeight.value * 0.2 > textSize &&
-                    boxWithConstraintsScope.maxWidth.value / name.length > textSize
-                ) {
-                    Text(
-                        name,
-                        color = offColor,
-                        fontSize = textSize.sp,
-                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(1.dp)
-                    )
-                }
+                val textSize = (boxWithConstraintsScope.maxHeight * ((1 - imageFraction) / 2.5f)).value
+                Text(
+                    name,
+                    color = offColor,
+                    fontSize = textSize.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(1.dp)
+                )
             }
-        }
-    }
-    scope.async {
-        for (update in updateChannel) {
-            switchState.value = uiSwitch.copy(state = update)
         }
     }
 }
