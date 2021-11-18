@@ -28,6 +28,9 @@ plugins {
 }
 kotlin {
     jvm()
+    dependencies {
+        commonMainImplementation("com.godaddy.android.colorpicker:compose-color-picker:0.2.1")
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {

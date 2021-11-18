@@ -10,6 +10,7 @@ class TestConfig : ConfigurationProvider {
     override fun createConfiguration(): Configuration = Configuration {
         var state: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
         var state2: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
+        var rgbState =   Thing.RGBSwitch.RGBSwitchState(255, 200, 255)
         Switch(
             id = "superSwitch",
             receiveState = {
@@ -29,10 +30,10 @@ class TestConfig : ConfigurationProvider {
         RGBSwitch(
             id = "rgbSwitch",
             receiveState = {
-                Thing.RGBSwitch.RGBSwitchState(255, 200, 255)
+                rgbState
             }.toStateChanelFactory(),
             updateState = {
-
+                rgbState=it
             }
         )
     }
