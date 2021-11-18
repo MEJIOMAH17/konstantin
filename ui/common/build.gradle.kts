@@ -32,6 +32,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":api"))
+                implementation(project(":concurrentmap"))
                 implementation(project(":client"))
                 implementation(Library.ktorClientWebsockets)
                 implementation(Library.kotlinSerialization)

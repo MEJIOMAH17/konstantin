@@ -26,5 +26,14 @@ class TestConfig : ConfigurationProvider {
             }.toStateChanelFactory(Duration.ofSeconds(1000)),
             updateState = {}
         )
+        RGBSwitch(
+            id = "rgbSwitch",
+            receiveState = {
+                Thing.RGBSwitch.RGBSwitchState(255, 200, 255)
+            }.toStateChanelFactory(),
+            updateState = {
+
+            }
+        )
     }
 }

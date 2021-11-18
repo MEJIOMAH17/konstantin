@@ -20,6 +20,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging.logger
+import org.github.konstantin.concurrentmap.ConcurrentMap
 import org.github.mejiomah17.konstantin.api.ClientEvent
 import org.github.mejiomah17.konstantin.api.ServerEvent
 import org.github.mejiomah17.konstantin.api.State
@@ -42,7 +43,7 @@ class KonstantinClient(
         ignoreUnknownKeys = true
     }
     private val log = logger {}
-    private val updateChannel = Channel<Thing<*>>(capacity = Channel.BUFFERED)
+    private val updateChannel = Channel<Pair<String, State>>(capacity = Channel.BUFFERED)
     private val subscribeNotifyChannel = Channel<Unit>(capacity = Channel.CONFLATED)
     private val subsciptions = ConcurrentMap<String, BroadcastChannel<State>>()
 
@@ -69,16 +70,25 @@ class KonstantinClient(
     /**
      * sends async message to server for state updating
      */
-    fun <S : State> updateState(thing: Thing<S>) {
+    fun updateState(thing: Thing<*>) {
         scope.async {
-            updateChannel.send(thing)
+            updateChannel.send(thing.id to thing.state)
+        }
+    }
+
+    /**
+     * sends async message to server for state updating
+     */
+    fun updateState(id:String,state: State) {
+        scope.async {
+            updateChannel.send(id to state)
         }
     }
 
 
     fun <S : State> subscribe(
         thing: Thing<S>,
-        channelFactory: (String) ->BroadcastChannel<S> = { BroadcastChannel(capacity = Channel.CONFLATED) }
+        channelFactory: (String) -> BroadcastChannel<S> = { BroadcastChannel(capacity = Channel.CONFLATED) }
     ): Channel<S> {
         val channel = subsciptions.computeIfAbsent(thing.id) {
             channelFactory(it) as BroadcastChannel<State>
@@ -140,8 +150,8 @@ class KonstantinClient(
                 }
             }
             async {
-                for (event in updateChannel) {
-                    send(Json.encodeToString(ClientEvent.StateUpdate(event.id, event.state) as ClientEvent))
+                for ((id, state) in updateChannel) {
+                    send(Json.encodeToString(ClientEvent.StateUpdate(id, state) as ClientEvent))
                 }
             }
             for (frame in incoming) {

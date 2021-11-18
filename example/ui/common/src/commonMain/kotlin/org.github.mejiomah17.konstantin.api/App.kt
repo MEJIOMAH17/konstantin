@@ -7,7 +7,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.github.mejiomah17.common.state
 import com.github.mejiomah17.common.switch.MultiSwitchButton
+import com.github.mejiomah17.common.switch.RGBSwitchButton
 import com.github.mejiomah17.common.switch.SwitchButton
 import kotlinx.coroutines.GlobalScope
 import org.github.mejiomah17.konstantin.client.KonstantinClient
@@ -26,25 +28,24 @@ fun App() {
     ) {
         BoxWithConstraints() {
             Column {
-                SwitchButton(
-                    client = konstantinClient,
-                    name = "My switch1",
-                    switch = Registry.superSwitch,
-                    scope = GlobalScope,
+                RGBSwitchButton(
+                    switchState = konstantinClient.state(GlobalScope, Registry.rgbSwitch),
+                    name = "RGB SWITCH",
                     modifier = Modifier.weight(1f)
                 )
                 SwitchButton(
-                    client = konstantinClient,
+                    switchState = konstantinClient.state(GlobalScope, Registry.superSwitch),
+                    name = "My switch1",
+                    modifier = Modifier.weight(1f)
+                )
+                SwitchButton(
+                    switchState = konstantinClient.state(GlobalScope, Registry.superSwitch2),
                     name = "My switch2kjljlkjlkjlkjlkjlkj",
-                    switch = Registry.superSwitch2,
-                    scope = GlobalScope,
                     modifier = Modifier.weight(1f)
                 )
                 MultiSwitchButton(
-                    client = konstantinClient,
                     name = "common",
-                    switches = listOf(Registry.superSwitch,Registry.superSwitch2),
-                    scope = GlobalScope,
+                    switches = konstantinClient.state(GlobalScope, Registry.superSwitch, Registry.superSwitch2),
                     modifier = Modifier.weight(1f)
                 )
             }

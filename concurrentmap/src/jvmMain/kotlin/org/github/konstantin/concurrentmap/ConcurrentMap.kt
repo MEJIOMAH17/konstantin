@@ -1,8 +1,8 @@
-package org.github.mejiomah17.konstantin.client
+package org.github.konstantin.concurrentmap
 
 import java.util.concurrent.ConcurrentHashMap
 
-internal actual class ConcurrentMap<K : Any, V> : Map<K, V> {
+actual class ConcurrentMap<K : Any, V> : Map<K, V> {
     private val delegate = ConcurrentHashMap<K, V>()
     override val entries: Set<Map.Entry<K, V>> = delegate.entries
     override val keys: Set<K> = delegate.keys

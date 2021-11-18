@@ -21,6 +21,7 @@ class ConfigurationScope {
         id: String,
         receiveState: StateChannelFactory<Thing.Switch.SwitchState>,
         updateState: suspend (Thing.Switch.SwitchState) -> Unit,
+        defaultState: Thing.Switch.SwitchState = Thing.Switch.SwitchState.Off
     ) {
         things.add(
             object : ThingAdapter<Thing.Switch.SwitchState> {
@@ -33,8 +34,34 @@ class ConfigurationScope {
                 override suspend fun stateChannel(): StateChannelFactory<Thing.Switch.SwitchState> {
                     return receiveState
                 }
+
+                override val defaultState = defaultState
             }
         )
+    }
+
+    fun RGBSwitch(
+        id: String,
+        receiveState: StateChannelFactory<Thing.RGBSwitch.RGBSwitchState>,
+        updateState: suspend (Thing.RGBSwitch.RGBSwitchState) -> Unit,
+        defaultState: Thing.RGBSwitch.RGBSwitchState = Thing.RGBSwitch.RGBSwitchState(0, 0, 0)
+    ) {
+        things.add(
+            object : ThingAdapter<Thing.RGBSwitch.RGBSwitchState> {
+                override val id: String = id
+
+                override suspend fun updateState(state: Thing.RGBSwitch.RGBSwitchState) {
+                    return updateState(state)
+                }
+
+                override suspend fun stateChannel(): StateChannelFactory<Thing.RGBSwitch.RGBSwitchState> {
+                    return receiveState
+                }
+
+                override val defaultState = defaultState
+            }
+        )
+
     }
 
     fun <S : State> (() -> S).toStateChanelFactory(
@@ -47,7 +74,7 @@ class ConfigurationScope {
                 scope.launch {
                     while (!channel.isClosedForSend) {
                         runCatching {
-                           channel.send( function.invoke())
+                            channel.send(function.invoke())
                         }.onFailure {
                             log.error(it) {
                                 "Exception while receiving state"

@@ -4,18 +4,7 @@ import com.github.mejiomah17.konstantin.Library
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization")
     `maven-publish`
-}
-
-dependencies{
-    commonMainImplementation(project(":api"))
-    commonMainImplementation(project(":concurrentmap"))
-    commonMainImplementation(Library.kotlinCoroutines)
-    commonMainImplementation(Library.ktorClientCio)
-    commonMainImplementation(Library.ktorClientWebsockets)
-    commonMainImplementation(Library.kotlinSerialization)
-    commonMainImplementation(Library.logger)
 }
 
 kotlin {

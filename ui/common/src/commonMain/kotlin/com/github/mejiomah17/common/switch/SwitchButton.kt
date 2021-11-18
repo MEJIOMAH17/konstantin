@@ -23,35 +23,27 @@ import com.github.mejiomah17.konstantin.icons.KonstantinIcons
 import com.github.mejiomah17.konstantin.icons.konstantinicons.Lightbulb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
+import org.github.mejiomah17.konstantin.api.State
 import org.github.mejiomah17.konstantin.api.Thing
 import org.github.mejiomah17.konstantin.client.KonstantinClient
 
 @Composable
 fun SwitchButton(
-    client: KonstantinClient,
-    switch: Thing.Switch,
     name: String,
-    scope: CoroutineScope,
     onColor: Color = KonstantinColors.on,
     offColor: Color = KonstantinColors.off,
+    switchState: MutableState<Thing.Switch.SwitchState>,
     modifier: Modifier = Modifier
 ) {
-    val updateChannel = client.subscribe(switch)
-    val switchState: MutableState<Thing.Switch.SwitchState> = mutableStateOf(switch.state)
 
     SwitchButton(
         name = name,
         onColor = onColor,
         offColor = offColor,
-        switchState = switchState,
-        onClick = { client.updateState(switch.copy(state = switchState.value.invert())) },
+        switchState = switchState.value,
+        onClick = { switchState.value = switchState.value.invert() },
         modifier = modifier
     )
-    scope.async {
-        for (update in updateChannel) {
-            switchState.value = update
-        }
-    }
 }
 
 @Composable
@@ -59,11 +51,30 @@ internal fun SwitchButton(
     name: String,
     onColor: Color,
     offColor: Color,
-    switchState: MutableState<Thing.Switch.SwitchState>,
+    switchState: Thing.Switch.SwitchState,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
-    val uiSwitch: Thing.Switch.SwitchState by remember { switchState }
+    LightButton(
+        name = name,
+        iconColor = when (switchState) {
+            Thing.Switch.SwitchState.Off -> offColor
+            Thing.Switch.SwitchState.On ->  onColor
+        },
+        textColor = offColor,
+        onClick = onClick,
+        modifier=modifier,
+    )
+}
+
+@Composable
+internal fun LightButton(
+    name: String,
+    iconColor:Color,
+    textColor:Color,
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
     Button(
         onClick = onClick,
         modifier = modifier
@@ -75,16 +86,13 @@ internal fun SwitchButton(
                 Image(
                     imageVector = KonstantinIcons.Lightbulb,
                     "",
-                    colorFilter = when (uiSwitch) {
-                        Thing.Switch.SwitchState.Off -> ColorFilter.tint(color = offColor)
-                        Thing.Switch.SwitchState.On -> ColorFilter.tint(color = onColor)
-                    },
+                    colorFilter = ColorFilter.tint(iconColor),
                     modifier = Modifier.fillMaxSize(imageFraction).align(Alignment.CenterHorizontally)
                 )
                 val textSize = (boxWithConstraintsScope.maxHeight * ((1 - imageFraction) / 2.5f)).value
                 Text(
                     name,
-                    color = offColor,
+                    color = textColor,
                     fontSize = textSize.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally).padding(1.dp)
                 )

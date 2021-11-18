@@ -20,6 +20,7 @@ include(
     "api",
     "backend",
     "client",
+    "concurrentmap",
     "configuration",
     "plugin",
     "ui:common",
