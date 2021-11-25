@@ -1,6 +1,7 @@
 package com.github.mejiomah17.konstantin.plugin
 
 import com.github.mejiomah17.konstantin.configuration.ConfigurationProvider
+import com.github.mejiomah17.konstantin.configuration.ThingAdapter
 import java.io.File
 import java.net.URLClassLoader
 import org.github.mejiomah17.konstantin.api.Thing
@@ -33,18 +34,7 @@ abstract class RegistryGeneratorTask : DefaultTask() {
             appendLine()
             appendLine("object Registry{")
             configuration.things.forEach {
-                val defaultState = it.defaultState
-                val thingDeclaration = when (defaultState) {
-                    is Thing.RGBSwitch.RGBSwitchState -> "Thing.RGBSwitch(id=\"${it.id}\", state = Thing.RGBSwitch.RGBSwitchState(red=${defaultState.red},green=${defaultState.green},blue=${defaultState.blue}))"
-                    is Thing.Switch.SwitchState -> {
-                        val value = when (defaultState) {
-                            Thing.Switch.SwitchState.Off -> "Thing.Switch.SwitchState.Off"
-                            Thing.Switch.SwitchState.On -> "Thing.Switch.SwitchState.On"
-                        }
-                        "Thing.Switch(id=\"${it.id}\", state = $value)"
-                    }
-                }
-                appendLine("    val ${it.id} = $thingDeclaration")
+                appendLine("    val ${it.id} = ${it.toDeclaration()}")
             }
             appendLine("}")
         }
@@ -54,7 +44,7 @@ abstract class RegistryGeneratorTask : DefaultTask() {
 
     }
 
-    fun writeGeneratedCode(providerClass: KClass<*>, dirPrefix: String, source: String) {
+    private fun writeGeneratedCode(providerClass: KClass<*>, dirPrefix: String, source: String) {
         val packageName = providerClass.java.packageName.replace(".", "/")
         val generatedDir = File(project.buildDir, "$dirPrefix/konstantin/src/main/kotlin/$packageName").also {
             it.mkdirs()
@@ -64,4 +54,29 @@ abstract class RegistryGeneratorTask : DefaultTask() {
         }
         sourceFile.writeText(source)
     }
+
+    private fun ThingAdapter<*>.toDeclaration(): String {
+        return when (val state = defaultState) {
+            is Thing.RGBSwitch.RGBSwitchState -> "Thing.RGBSwitch(id=\"${id}\", state = Thing.RGBSwitch.RGBSwitchState(red=${state.red},green=${state.green},blue=${state.blue}))"
+            is Thing.Switch.SwitchState -> {
+                val value = when (state) {
+                    Thing.Switch.SwitchState.Off -> "Thing.Switch.SwitchState.Off"
+                    Thing.Switch.SwitchState.On -> "Thing.Switch.SwitchState.On"
+                }
+                "Thing.Switch(id=\"${id}\", state = $value)"
+            }
+            is Thing.CO2Sensor.CO2State -> "Thing.CO2Sensor(id=\"${id}\", state = Thing.CO2Sensor.CO2State(${state.value}))"
+            is Thing.HumiditySensor.HumidityState -> "Thing.HumiditySensor(id=\"${id}\", state = Thing.HumiditySensor.HumidityState(${state.value}))"
+            is Thing.LightLevelSensor.LightLevelState -> "Thing.LightLevelSensor(id=\"${id}\", state = Thing.LightLevelSensor.LightLevelState(${state.value}))"
+            is Thing.MotionSensor.MotionSensorState -> {
+                val value = when (state) {
+                    Thing.MotionSensor.MotionSensorState.MotionDetected -> "Thing.MotionSensor.MotionSensorState.MotionDetected"
+                    Thing.MotionSensor.MotionSensorState.MotionIsNotDetected -> "Thing.MotionSensor.MotionSensorState.MotionIsNotDetected"
+                }
+                "Thing.MotionSensor(id=\"${id}\",state=$value)"
+            }
+            is Thing.TemperatureSensor.TemperatureState -> "Thing.TemperatureSensor(id=\"${id}\",Thing.TemperatureSensor.TemperatureState(${state.value}))"
+        }
+    }
+
 }

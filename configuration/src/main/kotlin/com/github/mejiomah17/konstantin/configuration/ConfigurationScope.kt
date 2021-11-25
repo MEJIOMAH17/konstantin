@@ -17,51 +17,119 @@ class ConfigurationScope {
         things.add(thing)
     }
 
+    fun <S : State> registerThing(
+        id: String,
+        stateChannelFactory: StateChannelFactory<S>,
+        updateState: suspend (S) -> Unit,
+        defaultState: S,
+    ) {
+        things.add(
+            ThingAdapterImpl(
+                id = id,
+                stateChannelFactory = stateChannelFactory,
+                updateState = updateState,
+                defaultState = defaultState
+            )
+        )
+
+    }
+
     fun Switch(
         id: String,
-        receiveState: StateChannelFactory<Thing.Switch.SwitchState>,
+        stateChannelFactory: StateChannelFactory<Thing.Switch.SwitchState>,
         updateState: suspend (Thing.Switch.SwitchState) -> Unit,
         defaultState: Thing.Switch.SwitchState = Thing.Switch.SwitchState.Off
     ) {
-        things.add(
-            object : ThingAdapter<Thing.Switch.SwitchState> {
-                override val id: String = id
-
-                override suspend fun updateState(state: Thing.Switch.SwitchState) {
-                    return updateState(state)
-                }
-
-                override suspend fun stateChannel(): StateChannelFactory<Thing.Switch.SwitchState> {
-                    return receiveState
-                }
-
-                override val defaultState = defaultState
-            }
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
         )
     }
 
     fun RGBSwitch(
         id: String,
-        receiveState: StateChannelFactory<Thing.RGBSwitch.RGBSwitchState>,
+        stateChannelFactory: StateChannelFactory<Thing.RGBSwitch.RGBSwitchState>,
         updateState: suspend (Thing.RGBSwitch.RGBSwitchState) -> Unit,
         defaultState: Thing.RGBSwitch.RGBSwitchState = Thing.RGBSwitch.RGBSwitchState(0, 0, 0)
     ) {
-        things.add(
-            object : ThingAdapter<Thing.RGBSwitch.RGBSwitchState> {
-                override val id: String = id
-
-                override suspend fun updateState(state: Thing.RGBSwitch.RGBSwitchState) {
-                    return updateState(state)
-                }
-
-                override suspend fun stateChannel(): StateChannelFactory<Thing.RGBSwitch.RGBSwitchState> {
-                    return receiveState
-                }
-
-                override val defaultState = defaultState
-            }
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
         )
+    }
 
+    fun MotionSensor(
+        id: String,
+        stateChannelFactory: StateChannelFactory<Thing.MotionSensor.MotionSensorState>,
+        updateState: suspend (Thing.MotionSensor.MotionSensorState) -> Unit,
+        defaultState: Thing.MotionSensor.MotionSensorState = Thing.MotionSensor.MotionSensorState.MotionIsNotDetected
+    ) {
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
+        )
+    }
+
+    fun TemperatureSensor(
+        id: String,
+        stateChannelFactory: StateChannelFactory<Thing.TemperatureSensor.TemperatureState>,
+        updateState: suspend (Thing.TemperatureSensor.TemperatureState) -> Unit,
+        defaultState: Thing.TemperatureSensor.TemperatureState = Thing.TemperatureSensor.TemperatureState(0)
+    ) {
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
+        )
+    }
+
+    fun HumiditySensor(
+        id: String,
+        stateChannelFactory: StateChannelFactory<Thing.HumiditySensor.HumidityState>,
+        updateState: suspend (Thing.HumiditySensor.HumidityState) -> Unit,
+        defaultState: Thing.HumiditySensor.HumidityState = Thing.HumiditySensor.HumidityState(0)
+    ) {
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
+        )
+    }
+
+    fun LightLevelSensor(
+        id: String,
+        stateChannelFactory: StateChannelFactory<Thing.LightLevelSensor.LightLevelState>,
+        updateState: suspend (Thing.LightLevelSensor.LightLevelState) -> Unit,
+        defaultState: Thing.LightLevelSensor.LightLevelState = Thing.LightLevelSensor.LightLevelState(0)
+    ) {
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
+        )
+    }
+
+    fun CO2Sensor(
+        id: String,
+        stateChannelFactory: StateChannelFactory<Thing.CO2Sensor.CO2State>,
+        updateState: suspend (Thing.CO2Sensor.CO2State) -> Unit,
+        defaultState: Thing.CO2Sensor.CO2State = Thing.CO2Sensor.CO2State(0)
+    ) {
+        registerThing(
+            id = id,
+            stateChannelFactory = stateChannelFactory,
+            updateState = updateState,
+            defaultState = defaultState
+        )
     }
 
     fun <S : State> (() -> S).toStateChanelFactory(

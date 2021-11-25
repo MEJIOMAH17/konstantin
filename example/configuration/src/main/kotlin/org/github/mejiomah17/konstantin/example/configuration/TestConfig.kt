@@ -10,10 +10,10 @@ class TestConfig : ConfigurationProvider {
     override fun createConfiguration(): Configuration = Configuration {
         var state: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
         var state2: Thing.Switch.SwitchState = Thing.Switch.SwitchState.On
-        var rgbState =   Thing.RGBSwitch.RGBSwitchState(255, 200, 255)
+        var rgbState = Thing.RGBSwitch.RGBSwitchState(255, 200, 255)
         Switch(
             id = "superSwitch",
-            receiveState = {
+            stateChannelFactory = {
                 state = state.invert()
                 state
             }.toStateChanelFactory(Duration.ofSeconds(1000)),
@@ -21,7 +21,7 @@ class TestConfig : ConfigurationProvider {
         )
         Switch(
             id = "superSwitch2",
-            receiveState = {
+            stateChannelFactory = {
                 state = state.invert()
                 state
             }.toStateChanelFactory(Duration.ofSeconds(1000)),
@@ -29,12 +29,47 @@ class TestConfig : ConfigurationProvider {
         )
         RGBSwitch(
             id = "rgbSwitch",
-            receiveState = {
+            stateChannelFactory = {
                 rgbState
             }.toStateChanelFactory(),
             updateState = {
-                rgbState=it
+                rgbState = it
             }
+        )
+        MotionSensor(
+            id = "motionSensor",
+            stateChannelFactory = {
+                Thing.MotionSensor.MotionSensorState.MotionDetected
+            }.toStateChanelFactory(),
+            updateState = {}
+        )
+        TemperatureSensor(
+            id = "TemperatureSensor",
+            stateChannelFactory = {
+                Thing.TemperatureSensor.TemperatureState(36.6)
+            }.toStateChanelFactory(),
+            updateState = {}
+        )
+        HumiditySensor(
+            id = "HumiditySensor",
+            stateChannelFactory = {
+                Thing.HumiditySensor.HumidityState(80)
+            }.toStateChanelFactory(),
+            updateState = {}
+        )
+        LightLevelSensor(
+            id = "LightLevelSensor",
+            stateChannelFactory = {
+                Thing.LightLevelSensor.LightLevelState(1200)
+            }.toStateChanelFactory(),
+            updateState = {}
+        )
+        CO2Sensor(
+            id = "CO2Sensor",
+            stateChannelFactory = {
+                Thing.CO2Sensor.CO2State(500)
+            }.toStateChanelFactory(),
+            updateState = {}
         )
     }
 }
