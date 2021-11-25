@@ -8,6 +8,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
 
@@ -27,6 +28,7 @@ abstract class RegistryGeneratorTask : DefaultTask() {
         val provider = providerClass.primaryConstructor!!.call() as ConfigurationProvider
         val configuration = provider.createConfiguration()
         val source = buildString {
+            appendLine("package ${providerClass.java.packageName}")
             appendLine("import org.github.mejiomah17.konstantin.api.Thing")
             appendLine()
             appendLine("object Registry{")
@@ -35,7 +37,7 @@ abstract class RegistryGeneratorTask : DefaultTask() {
                 val thingDeclaration = when (defaultState) {
                     is Thing.RGBSwitch.RGBSwitchState -> "Thing.RGBSwitch(id=\"${it.id}\", state = Thing.RGBSwitch.RGBSwitchState(red=${defaultState.red},green=${defaultState.green},blue=${defaultState.blue}))"
                     is Thing.Switch.SwitchState -> {
-                        val value = when(defaultState){
+                        val value = when (defaultState) {
                             Thing.Switch.SwitchState.Off -> "Thing.Switch.SwitchState.Off"
                             Thing.Switch.SwitchState.On -> "Thing.Switch.SwitchState.On"
                         }
@@ -46,11 +48,18 @@ abstract class RegistryGeneratorTask : DefaultTask() {
             }
             appendLine("}")
         }
+
+        writeGeneratedCode(providerClass = providerClass, dirPrefix = Constants.generatedUi, source = source)
+        writeGeneratedCode(providerClass = providerClass, dirPrefix = Constants.generatedBackend, source = source)
+
+    }
+
+    fun writeGeneratedCode(providerClass: KClass<*>, dirPrefix: String, source: String) {
         val packageName = providerClass.java.packageName.replace(".", "/")
-        val generatedDir = File(project.buildDir, "generated/konstantin/src/main/kotlin/$packageName").also {
+        val generatedDir = File(project.buildDir, "$dirPrefix/konstantin/src/main/kotlin/$packageName").also {
             it.mkdirs()
         }
-        val sourceFile = File(generatedDir, "KonstantinBinding.kt").also {
+        val sourceFile = File(generatedDir, "Registry.kt").also {
             it.createNewFile()
         }
         sourceFile.writeText(source)

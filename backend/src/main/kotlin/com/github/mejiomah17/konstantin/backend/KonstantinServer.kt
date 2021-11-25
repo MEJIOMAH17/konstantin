@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -35,9 +36,10 @@ class KonstantinServer(
     private val serverStopGracePeriod: Duration = Duration.ofSeconds(1),
     private val serverStopTimeoutMillis: Duration = Duration.ofSeconds(2),
     private val backgroundThreadCount: Int = Runtime.getRuntime().availableProcessors(),
+    private val automation: Automation = Automation { },
     ktorHook: (Application) -> Unit = {}
 ) : Closeable {
-    private val backendScope = object : CoroutineScope {
+    private val backendScope: CoroutineScope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext =
             (SupervisorJob() + Executors.newFixedThreadPool(backgroundThreadCount).asCoroutineDispatcher())
     }
@@ -46,7 +48,7 @@ class KonstantinServer(
     }.toMap()
 
 
-    val stateManager = StateManager()
+    val stateManager = StateManagerImpl()
     val log = LoggerFactory.getLogger(this::class.java)
 
     private val server = embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
@@ -101,6 +103,12 @@ class KonstantinServer(
 
     fun start(wait: Boolean = false) {
         startCollectors()
+        backendScope.async {
+            automation.registerAutomations(object : AutomationContext {
+                override val stateManager: StateManager = this@KonstantinServer.stateManager
+                override val coroutineScope: CoroutineScope = this@async
+            })
+        }
         server.start(wait)
     }
 
@@ -121,6 +129,7 @@ class KonstantinServer(
     }
 
     override fun close() {
+        backendScope.cancel()
         server.stop(
             gracePeriodMillis = serverStopGracePeriod.toMillis(),
             timeoutMillis = serverStopTimeoutMillis.toMillis()

@@ -1,6 +1,5 @@
 package org.github.mejiomah17.konstantin.api
 
-import Registry
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,7 @@ import com.github.mejiomah17.common.switch.RGBSwitchButton
 import com.github.mejiomah17.common.switch.SwitchButton
 import kotlinx.coroutines.GlobalScope
 import org.github.mejiomah17.konstantin.client.KonstantinClient
+import org.github.mejiomah17.konstantin.example.configuration.Registry
 
 val konstantinClient = KonstantinClient(
     host = "192.168.1.71",

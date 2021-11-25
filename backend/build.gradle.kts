@@ -8,8 +8,9 @@ plugins {
 
 
 dependencies {
-    implementation(project(":api"))
-    implementation(project(":configuration"))
+    api(project(":api"))
+    api(project(":configuration"))
+    api(Library.kotlinCoroutines)
     implementation(Library.ktorServerNetty)
     implementation(Library.ktorServerWebsockets)
     implementation(Library.kotlinSerialization)
@@ -30,7 +31,7 @@ tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-kotlin{
+kotlin {
     publishing {
         repositories {
             mavenLocal()
