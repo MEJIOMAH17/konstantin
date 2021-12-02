@@ -31,15 +31,3 @@ tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-kotlin {
-    publishing {
-        repositories {
-            mavenLocal()
-        }
-        publications {
-            create<MavenPublication>("lib") {
-                from(components["kotlin"])
-            }
-        }
-    }
-}

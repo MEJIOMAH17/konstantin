@@ -1,4 +1,4 @@
-rootProject.name = "konstantin"
+rootProject.name = "example"
 
 pluginManagement {
     repositories {
