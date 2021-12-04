@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class State
-
+//TODO add generic thing with string state
 @Serializable
 sealed class Thing<T : State> {
     //TODO description?
@@ -48,70 +48,28 @@ sealed class Thing<T : State> {
     }
 
     @Serializable
-    data class MotionSensor(
+    data class BooleanSensor(
         override val id: String,
-        override val state: MotionSensorState
-    ) : Thing<MotionSensor.MotionSensorState>() {
+        override val state: BooleanSensorState
+    ) : Thing<BooleanSensor.BooleanSensorState>() {
 
         @Serializable
-        sealed class MotionSensorState : State() {
+        sealed class BooleanSensorState : State() {
             @Serializable
-            object MotionDetected : MotionSensorState()
+            object False : BooleanSensorState()
 
             @Serializable
-            object MotionIsNotDetected : MotionSensorState()
+            object True : BooleanSensorState()
         }
     }
 
     @Serializable
-    data class TemperatureSensor(
+    data class NumericSensor(
         override val id: String,
-        override val state: TemperatureState
-    ) : Thing<TemperatureSensor.TemperatureState>() {
+        override val state: NumericState
+    ) : Thing<NumericSensor.NumericState>() {
         @Serializable
-        data class TemperatureState(val value: Double) : State() {
-            constructor(value: Int) : this(value.toDouble())
-        }
-    }
-
-    @Serializable
-    data class HumiditySensor(
-        override val id: String,
-        override val state: HumidityState
-    ) : Thing<HumiditySensor.HumidityState>() {
-        @Serializable
-        data class HumidityState(
-            /**
-             * percent value from 0 to 100
-             */
-            val value: Double
-        ) : State() {
-            constructor(value: Int) : this(value.toDouble())
-        }
-    }
-
-    @Serializable
-    data class LightLevelSensor(
-        override val id: String,
-        override val state: LightLevelState
-    ) : Thing<LightLevelSensor.LightLevelState>() {
-        @Serializable
-        data class LightLevelState(
-            val value: Double
-        ) : State() {
-            constructor(value: Int) : this(value.toDouble())
-        }
-    }
-
-    @Serializable
-    data class CO2Sensor(
-        override val id: String,
-        override val state: CO2State
-    ) : Thing<CO2Sensor.CO2State>() {
-        @Serializable
-        data class CO2State(
-            val value: Double
-        ) : State() {
+        data class NumericState(val value: Double) : State() {
             constructor(value: Int) : this(value.toDouble())
         }
     }

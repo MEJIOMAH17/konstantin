@@ -62,11 +62,11 @@ class ConfigurationScope {
         )
     }
 
-    fun MotionSensor(
+    fun BooleanSensor(
         id: String,
-        stateChannelFactory: StateChannelFactory<Thing.MotionSensor.MotionSensorState>,
-        updateState: suspend (Thing.MotionSensor.MotionSensorState) -> Unit,
-        defaultState: Thing.MotionSensor.MotionSensorState = Thing.MotionSensor.MotionSensorState.MotionIsNotDetected
+        stateChannelFactory: StateChannelFactory<Thing.BooleanSensor.BooleanSensorState>,
+        updateState: suspend (Thing.BooleanSensor.BooleanSensorState) -> Unit = {},
+        defaultState: Thing.BooleanSensor.BooleanSensorState = Thing.BooleanSensor.BooleanSensorState.True
     ) {
         registerThing(
             id = id,
@@ -76,11 +76,11 @@ class ConfigurationScope {
         )
     }
 
-    fun TemperatureSensor(
+    fun NumericSensor(
         id: String,
-        stateChannelFactory: StateChannelFactory<Thing.TemperatureSensor.TemperatureState>,
-        updateState: suspend (Thing.TemperatureSensor.TemperatureState) -> Unit,
-        defaultState: Thing.TemperatureSensor.TemperatureState = Thing.TemperatureSensor.TemperatureState(0)
+        stateChannelFactory: StateChannelFactory<Thing.NumericSensor.NumericState>,
+        updateState: suspend (Thing.NumericSensor.NumericState) -> Unit = {},
+        defaultState: Thing.NumericSensor.NumericState = Thing.NumericSensor.NumericState(0)
     ) {
         registerThing(
             id = id,
@@ -90,49 +90,16 @@ class ConfigurationScope {
         )
     }
 
-    fun HumiditySensor(
-        id: String,
-        stateChannelFactory: StateChannelFactory<Thing.HumiditySensor.HumidityState>,
-        updateState: suspend (Thing.HumiditySensor.HumidityState) -> Unit,
-        defaultState: Thing.HumiditySensor.HumidityState = Thing.HumiditySensor.HumidityState(0)
-    ) {
-        registerThing(
-            id = id,
-            stateChannelFactory = stateChannelFactory,
-            updateState = updateState,
-            defaultState = defaultState
-        )
-    }
-
-    fun LightLevelSensor(
-        id: String,
-        stateChannelFactory: StateChannelFactory<Thing.LightLevelSensor.LightLevelState>,
-        updateState: suspend (Thing.LightLevelSensor.LightLevelState) -> Unit,
-        defaultState: Thing.LightLevelSensor.LightLevelState = Thing.LightLevelSensor.LightLevelState(0)
-    ) {
-        registerThing(
-            id = id,
-            stateChannelFactory = stateChannelFactory,
-            updateState = updateState,
-            defaultState = defaultState
-        )
-    }
-
-    fun CO2Sensor(
-        id: String,
-        stateChannelFactory: StateChannelFactory<Thing.CO2Sensor.CO2State>,
-        updateState: suspend (Thing.CO2Sensor.CO2State) -> Unit,
-        defaultState: Thing.CO2Sensor.CO2State = Thing.CO2Sensor.CO2State(0)
-    ) {
-        registerThing(
-            id = id,
-            stateChannelFactory = stateChannelFactory,
-            updateState = updateState,
-            defaultState = defaultState
-        )
-    }
 
     fun <S : State> (() -> S).toStateChanelFactory(
+        stateCollectTimeout: Duration = DefaultCollectTimeout.value
+    ): StateChannelFactory<S> {
+        return suspend {
+            this()
+        }.toStateChanelFactory(stateCollectTimeout = stateCollectTimeout)
+    }
+
+    fun <S : State> (suspend () -> S).toStateChanelFactory(
         stateCollectTimeout: Duration = DefaultCollectTimeout.value
     ): StateChannelFactory<S> {
         val function = this

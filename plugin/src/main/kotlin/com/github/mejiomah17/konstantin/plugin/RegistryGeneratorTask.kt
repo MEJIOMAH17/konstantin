@@ -65,17 +65,14 @@ abstract class RegistryGeneratorTask : DefaultTask() {
                 }
                 "Thing.Switch(id=\"${id}\", state = $value)"
             }
-            is Thing.CO2Sensor.CO2State -> "Thing.CO2Sensor(id=\"${id}\", state = Thing.CO2Sensor.CO2State(${state.value}))"
-            is Thing.HumiditySensor.HumidityState -> "Thing.HumiditySensor(id=\"${id}\", state = Thing.HumiditySensor.HumidityState(${state.value}))"
-            is Thing.LightLevelSensor.LightLevelState -> "Thing.LightLevelSensor(id=\"${id}\", state = Thing.LightLevelSensor.LightLevelState(${state.value}))"
-            is Thing.MotionSensor.MotionSensorState -> {
+            is Thing.BooleanSensor.BooleanSensorState -> {
                 val value = when (state) {
-                    Thing.MotionSensor.MotionSensorState.MotionDetected -> "Thing.MotionSensor.MotionSensorState.MotionDetected"
-                    Thing.MotionSensor.MotionSensorState.MotionIsNotDetected -> "Thing.MotionSensor.MotionSensorState.MotionIsNotDetected"
+                    Thing.BooleanSensor.BooleanSensorState.False -> "Thing.BooleanSensor.BooleanSensorState.False"
+                    Thing.BooleanSensor.BooleanSensorState.True -> "Thing.BooleanSensor.BooleanSensorState.True"
                 }
-                "Thing.MotionSensor(id=\"${id}\",state=$value)"
+                "Thing.BooleanSensor(id=\"${id}\",state=$value)"
             }
-            is Thing.TemperatureSensor.TemperatureState -> "Thing.TemperatureSensor(id=\"${id}\",Thing.TemperatureSensor.TemperatureState(${state.value}))"
+            is Thing.NumericSensor.NumericState -> "Thing.NumericSensor(id=\"${id}\",Thing.NumericSensor.NumericState(${state.value}))"
         }
     }
 

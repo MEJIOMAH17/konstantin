@@ -36,38 +36,17 @@ class TestConfig : ConfigurationProvider {
                 rgbState = it
             }
         )
-        MotionSensor(
+        BooleanSensor(
             id = "motionSensor",
             stateChannelFactory = {
-                Thing.MotionSensor.MotionSensorState.MotionDetected
+                Thing.BooleanSensor.BooleanSensorState.False
             }.toStateChanelFactory(),
             updateState = {}
         )
-        TemperatureSensor(
+        NumericSensor(
             id = "TemperatureSensor",
             stateChannelFactory = {
-                Thing.TemperatureSensor.TemperatureState(36.6)
-            }.toStateChanelFactory(),
-            updateState = {}
-        )
-        HumiditySensor(
-            id = "HumiditySensor",
-            stateChannelFactory = {
-                Thing.HumiditySensor.HumidityState(80)
-            }.toStateChanelFactory(),
-            updateState = {}
-        )
-        LightLevelSensor(
-            id = "LightLevelSensor",
-            stateChannelFactory = {
-                Thing.LightLevelSensor.LightLevelState(1200)
-            }.toStateChanelFactory(),
-            updateState = {}
-        )
-        CO2Sensor(
-            id = "CO2Sensor",
-            stateChannelFactory = {
-                Thing.CO2Sensor.CO2State(500)
+                Thing.NumericSensor.NumericState(36.6)
             }.toStateChanelFactory(),
             updateState = {}
         )
