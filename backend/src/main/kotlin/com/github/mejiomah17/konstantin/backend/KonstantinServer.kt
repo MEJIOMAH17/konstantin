@@ -36,8 +36,9 @@ class KonstantinServer(
     private val serverStopGracePeriod: Duration = Duration.ofSeconds(1),
     private val serverStopTimeoutMillis: Duration = Duration.ofSeconds(2),
     private val backgroundThreadCount: Int = Runtime.getRuntime().availableProcessors(),
-    private val automation: Automation = Automation { },
-    ktorHook: (Application) -> Unit = {}
+    private val port:Int = 8080,
+    ktorHook: (Application) -> Unit = {},
+    private val automation: Automation = Automation { }
 ) : Closeable {
     private val backendScope: CoroutineScope = object : CoroutineScope {
         override val coroutineContext: CoroutineContext =
@@ -51,7 +52,7 @@ class KonstantinServer(
     val stateManager = StateManagerImpl()
     val log = LoggerFactory.getLogger(this::class.java)
 
-    private val server = embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    private val server = embeddedServer(Netty, port = port, host = "0.0.0.0") {
         install(WebSockets)
         routing {
             webSocket("/") {
