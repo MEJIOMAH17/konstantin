@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm")
     id("org.github.mejiomah17.konstantin")
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 
@@ -19,6 +20,15 @@ kotlin{
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks{
+    shadowJar {
+        mergeServiceFiles()
+        manifest {
+            attributes(Pair("Main-Class", "com.github.mejiomah17.konstantin.example.server.ServerKt"))
+        }
+    }
 }
 
 tasks.withType<KotlinCompile>() {
