@@ -8,8 +8,7 @@ import org.github.mejiomah17.konstantin.example.configuration.Registry
 import org.github.mejiomah17.konstantin.example.configuration.TestConfig
 
 fun main() {
-    KonstantinServer(
-        configuration = TestConfig().createConfiguration(),
+    KonstantinServer(TestConfig().createConfiguration()) {
         automation = Automation {
             it.coroutineScope.async {
                 for (switchUpdate in it.stateManager.subscribe(Registry.superSwitch)) {
@@ -20,5 +19,5 @@ fun main() {
                 }
             }
         }
-    ).start(wait = true)
+    }.start(wait = true)
 }
