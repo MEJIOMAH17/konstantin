@@ -1,6 +1,5 @@
 package com.github.mejiomah17.konstantin.configuration
 
-import java.time.Duration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -9,6 +8,7 @@ import kotlinx.coroutines.launch
 import mu.KotlinLogging.logger
 import org.github.mejiomah17.konstantin.api.State
 import org.github.mejiomah17.konstantin.api.Thing
+import java.time.Duration
 
 class ConfigurationScope {
     internal val things = ArrayList<ThingAdapter<*>>()
@@ -31,7 +31,6 @@ class ConfigurationScope {
                 defaultState = defaultState
             )
         )
-
     }
 
     fun Switch(
@@ -89,7 +88,6 @@ class ConfigurationScope {
             defaultState = defaultState
         )
     }
-
 
     fun <S : State> (() -> S).toStateChanelFactory(
         stateCollectTimeout: Duration = DefaultCollectTimeout.value

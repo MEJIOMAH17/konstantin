@@ -13,7 +13,6 @@ import com.github.mejiomah17.common.KonstantinColors
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import org.github.mejiomah17.konstantin.api.Thing
 
-
 @Composable
 @ExperimentalGraphicsApi
 fun RGBSwitchButton(
@@ -41,7 +40,4 @@ fun RGBSwitchButton(
             )
         }
     }
-
-
 }
-

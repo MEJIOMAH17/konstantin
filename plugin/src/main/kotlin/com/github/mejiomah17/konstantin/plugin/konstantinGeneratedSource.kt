@@ -1,6 +1,5 @@
 package com.github.mejiomah17.konstantin.plugin
 
-import java.io.File
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
@@ -9,7 +8,7 @@ import org.gradle.kotlin.dsl.getting
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-
+import java.io.File
 
 fun KotlinMultiplatformExtension.useKonstantinGeneratedSource(
     project: Project,
@@ -25,9 +24,7 @@ fun KotlinMultiplatformExtension.useKonstantinGeneratedSource(
     kotlin.runCatching { project.tasks.getByName("compileKotlinJvm") }.onSuccess {
         it.dependsOn(":configuration:konstantinGenerateSource")
     }
-
 }
-
 
 fun KotlinJvmProjectExtension.useKonstantinGeneratedSource(
     project: Project,
@@ -42,9 +39,8 @@ fun KotlinJvmProjectExtension.useKonstantinGeneratedSource(
     kotlin.runCatching { project.tasks.getByName("compileKotlin") }.onSuccess {
         it.dependsOn(":configuration:konstantinGenerateSource")
     }
-
 }
 
-internal fun KotlinMultiplatformExtension.sourceSets(configure: Action<NamedDomainObjectContainer<KotlinSourceSet>>): Unit {
+internal fun KotlinMultiplatformExtension.sourceSets(configure: Action<NamedDomainObjectContainer<KotlinSourceSet>>) {
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("sourceSets", configure)
 }

@@ -12,5 +12,5 @@ sealed class ServerEvent {
     class StateUpdate(
         val thingId: String,
         val state: State
-    ):ServerEvent()
+    ) : ServerEvent()
 }

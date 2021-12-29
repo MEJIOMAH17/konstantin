@@ -26,7 +26,7 @@ import org.github.mejiomah17.konstantin.api.ServerEvent
 import org.github.mejiomah17.konstantin.api.State
 import org.github.mejiomah17.konstantin.api.Thing
 
-//TODO rewrite all client api to builder configuration instead of parameter passing
+// TODO rewrite all client api to builder configuration instead of parameter passing
 class KonstantinClient(
     private val host: String,
     private val port: Int,
@@ -51,7 +51,7 @@ class KonstantinClient(
         httpClient.close()
     }
 
-    fun start(): Unit {
+    fun start() {
         scope.async {
             while (true) {
                 runCatching {
@@ -63,7 +63,6 @@ class KonstantinClient(
                 }
                 delay(500)
             }
-
         }
     }
 
@@ -79,12 +78,11 @@ class KonstantinClient(
     /**
      * sends async message to server for state updating
      */
-    fun updateState(id:String,state: State) {
+    fun updateState(id: String, state: State) {
         scope.async {
             updateChannel.send(id to state)
         }
     }
-
 
     fun <S : State> subscribe(
         thing: Thing<S>,
@@ -114,7 +112,6 @@ class KonstantinClient(
         return result.mapValues { (_, v) -> v.openSubscription() } as Map<Thing<S>, Channel<S>>
     }
 
-
     fun unsubscribeAll() {
         subsciptions.clear()
         scope.async {
@@ -140,6 +137,13 @@ class KonstantinClient(
         }
     }
 
+    suspend fun <T> use(block: suspend (KonstantinClient) -> T): T {
+        try {
+            return block(this)
+        } finally {
+            close()
+        }
+    }
 
     private suspend fun clientWork() {
         httpClient.webSocket(method = HttpMethod.Get, host = host, port = port, request = request, path = path) {

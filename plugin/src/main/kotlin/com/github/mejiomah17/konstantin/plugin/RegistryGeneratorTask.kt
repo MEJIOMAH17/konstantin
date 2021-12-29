@@ -2,16 +2,15 @@ package com.github.mejiomah17.konstantin.plugin
 
 import com.github.mejiomah17.konstantin.configuration.ConfigurationProvider
 import com.github.mejiomah17.konstantin.configuration.ThingAdapter
-import java.io.File
-import java.net.URLClassLoader
 import org.github.mejiomah17.konstantin.api.Thing
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import java.io.File
+import java.net.URLClassLoader
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
-
 
 abstract class RegistryGeneratorTask : DefaultTask() {
     @get:Input
@@ -41,7 +40,6 @@ abstract class RegistryGeneratorTask : DefaultTask() {
 
         writeGeneratedCode(providerClass = providerClass, dirPrefix = Constants.generatedUi, source = source)
         writeGeneratedCode(providerClass = providerClass, dirPrefix = Constants.generatedBackend, source = source)
-
     }
 
     private fun writeGeneratedCode(providerClass: KClass<*>, dirPrefix: String, source: String) {
@@ -75,5 +73,4 @@ abstract class RegistryGeneratorTask : DefaultTask() {
             is Thing.NumericSensor.NumericState -> "Thing.NumericSensor(id=\"${id}\",Thing.NumericSensor.NumericState(${state.value}))"
         }
     }
-
 }

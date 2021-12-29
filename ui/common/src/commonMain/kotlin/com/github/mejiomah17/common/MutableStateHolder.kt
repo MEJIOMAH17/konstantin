@@ -41,10 +41,8 @@ fun <S : State> KonstantinClient.state(scope: CoroutineScope, thing: Thing<S>): 
         override fun component2(): (S) -> Unit {
             return state.component2()
         }
-
     }
 }
-
 
 fun <S : State> KonstantinClient.state(scope: CoroutineScope, vararg things: Thing<S>): List<MutableState<S>> {
     return things.map { state(scope, it) }

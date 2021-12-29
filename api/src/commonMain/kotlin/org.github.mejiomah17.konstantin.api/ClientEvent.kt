@@ -17,5 +17,5 @@ sealed class ClientEvent {
     class StateUpdate(
         val thingId: String,
         val state: State
-    ): ClientEvent()
+    ) : ClientEvent()
 }

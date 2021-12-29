@@ -1,9 +1,9 @@
 package com.github.mejiomah17.konstantin.backend
 
-import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import java.util.concurrent.ConcurrentHashMap
 
 class SubscriptionManager {
     private val lock = Any()

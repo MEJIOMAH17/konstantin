@@ -9,10 +9,10 @@ public object KonstantinIcons
 private var __AllAssets: ____KtList<ImageVector>? = null
 
 public val KonstantinIcons.AllAssets: ____KtList<ImageVector>
-  get() {
-    if (__AllAssets != null) {
-      return __AllAssets!!
+    get() {
+        if (__AllAssets != null) {
+            return __AllAssets!!
+        }
+        __AllAssets = listOf(Lightbulb)
+        return __AllAssets!!
     }
-    __AllAssets= listOf(Lightbulb)
-    return __AllAssets!!
-  }

@@ -1,5 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.github.mejiomah17.konstantin.Library
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
@@ -12,10 +12,8 @@ dependencies {
     implementation(Library.logger)
 }
 
-
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "16"
+    kotlinOptions.jvmTarget = "11"
 }
-
 
 val compileKotlin: KotlinCompile by tasks

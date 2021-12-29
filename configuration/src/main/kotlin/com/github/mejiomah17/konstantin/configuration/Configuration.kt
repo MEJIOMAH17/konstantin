@@ -1,6 +1,5 @@
 package com.github.mejiomah17.konstantin.configuration
 
-
 class Configuration(
     val things: List<ThingAdapter<*>>
 ) {
@@ -11,6 +10,3 @@ class Configuration(
         }
     )
 }
-
-
-

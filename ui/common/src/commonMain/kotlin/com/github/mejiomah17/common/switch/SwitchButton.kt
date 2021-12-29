@@ -10,8 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,11 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.github.mejiomah17.common.KonstantinColors
 import com.github.mejiomah17.konstantin.icons.KonstantinIcons
 import com.github.mejiomah17.konstantin.icons.konstantinicons.Lightbulb
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import org.github.mejiomah17.konstantin.api.State
 import org.github.mejiomah17.konstantin.api.Thing
-import org.github.mejiomah17.konstantin.client.KonstantinClient
 
 @Composable
 fun SwitchButton(
@@ -59,19 +53,19 @@ internal fun SwitchButton(
         name = name,
         iconColor = when (switchState) {
             Thing.Switch.SwitchState.Off -> offColor
-            Thing.Switch.SwitchState.On ->  onColor
+            Thing.Switch.SwitchState.On -> onColor
         },
         textColor = offColor,
         onClick = onClick,
-        modifier=modifier,
+        modifier = modifier,
     )
 }
 
 @Composable
 internal fun LightButton(
     name: String,
-    iconColor:Color,
-    textColor:Color,
+    iconColor: Color,
+    textColor: Color,
     onClick: () -> Unit,
     modifier: Modifier
 ) {

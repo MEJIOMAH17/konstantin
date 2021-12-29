@@ -1,6 +1,4 @@
-import org.jetbrains.kotlin.cli.jvm.main
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.github.mejiomah17.konstantin.Library
+
 
 plugins {
     kotlin("multiplatform")

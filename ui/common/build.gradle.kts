@@ -8,7 +8,6 @@ buildscript {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://jitpack.io")
         maven("https://jetbrains.bintray.com/trove4j")
-
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${com.github.mejiomah17.konstantin.Version.kotlin}")
@@ -23,7 +22,7 @@ buildscript {
 }
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version  "1.0.0-beta5"
+    id("org.jetbrains.compose") version "1.0.0-beta5"
     `maven-publish`
 }
 kotlin {
@@ -81,5 +80,4 @@ tasks.create("generateIcons") {
         )
         print("adsf")
     }
-
 }

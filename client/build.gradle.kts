@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.cli.jvm.main
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.github.mejiomah17.konstantin.Library
 
 plugins {
@@ -8,7 +6,7 @@ plugins {
     `maven-publish`
 }
 
-dependencies{
+dependencies {
     commonMainImplementation(project(":api"))
     commonMainImplementation(project(":concurrentmap"))
     commonMainImplementation(Library.kotlinCoroutines)

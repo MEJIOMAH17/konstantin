@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class State
-//TODO add generic thing with string state
+// TODO add generic thing with string state
 @Serializable
 sealed class Thing<T : State> {
-    //TODO description?
+    // TODO description?
     abstract val id: String
     abstract val state: T
 
@@ -73,5 +73,4 @@ sealed class Thing<T : State> {
             constructor(value: Int) : this(value.toDouble())
         }
     }
-
 }

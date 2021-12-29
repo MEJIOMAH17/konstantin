@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.cli.jvm.main
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
     kotlin("multiplatform")
@@ -7,7 +6,7 @@ plugins {
     `maven-publish`
 }
 
-dependencies{
+dependencies {
     commonMainImplementation(com.github.mejiomah17.konstantin.Library.kotlinSerialization)
 }
 

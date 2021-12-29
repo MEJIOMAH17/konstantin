@@ -16,5 +16,4 @@ internal class ThingAdapterImpl<S : State>(
     override suspend fun updateState(state: S) {
         return updateState.invoke(state)
     }
-
 }

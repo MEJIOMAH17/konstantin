@@ -16,11 +16,15 @@ public val KonstantinIcons.Lightbulb: ImageVector
         if (_lightbulb != null) {
             return _lightbulb!!
         }
-        _lightbulb = Builder(name = "Lightbulb", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
-                viewportWidth = 24.0f, viewportHeight = 24.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
-                    strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
-                    pathFillType = NonZero) {
+        _lightbulb = Builder(
+            name = "Lightbulb", defaultWidth = 24.0.dp, defaultHeight = 24.0.dp,
+            viewportWidth = 24.0f, viewportHeight = 24.0f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)), stroke = null, strokeLineWidth = 0.0f,
+                strokeLineCap = Butt, strokeLineJoin = Miter, strokeLineMiter = 4.0f,
+                pathFillType = NonZero
+            ) {
                 moveTo(12.0f, 2.0f)
                 arcTo(7.0f, 7.0f, 0.0f, false, false, 5.0f, 9.0f)
                 curveTo(5.0f, 11.38f, 6.19f, 13.47f, 8.0f, 14.74f)
@@ -41,7 +45,7 @@ public val KonstantinIcons.Lightbulb: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _lightbulb!!
     }
 

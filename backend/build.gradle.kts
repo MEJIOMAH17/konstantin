@@ -6,7 +6,6 @@ plugins {
     `maven-publish`
 }
 
-
 dependencies {
     api(project(":api"))
     api(project(":configuration"))
@@ -20,7 +19,6 @@ dependencies {
     testImplementation(Library.ktorClientCio)
     testImplementation(Library.ktorClientWebsockets)
     testImplementation(Library.kotest)
-
 }
 
 tasks.test {
@@ -28,6 +26,5 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "16"
+    kotlinOptions.jvmTarget = "11"
 }
-

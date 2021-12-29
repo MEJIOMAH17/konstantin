@@ -12,7 +12,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "16"
+    kotlinOptions.jvmTarget = "11"
 }
 
 tasks.test {
@@ -22,7 +22,7 @@ tasks.test {
 gradlePlugin {
     plugins {
         create("konstantinPlugin") {
-            id =  project.group.toString()
+            id = project.group.toString()
             implementationClass = "com.github.mejiomah17.konstantin.plugin.RegistryGeneratorPlugin"
         }
     }
@@ -33,4 +33,3 @@ publishing {
         mavenLocal()
     }
 }
-

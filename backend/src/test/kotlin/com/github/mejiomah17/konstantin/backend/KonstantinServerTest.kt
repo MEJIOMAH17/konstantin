@@ -2,12 +2,12 @@ package com.github.mejiomah17.konstantin.backend
 
 import com.github.mejiomah17.konstantin.configuration.Configuration
 import io.kotest.matchers.shouldBe
-import java.time.Duration
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.github.mejiomah17.konstantin.api.Thing
 import org.github.mejiomah17.konstantin.client.KonstantinClient
 import org.junit.jupiter.api.Test
+import java.time.Duration
 
 class KonstantinServerTest {
 
@@ -19,20 +19,18 @@ class KonstantinServerTest {
         val config = Configuration {
             Switch(
                 id = "superSwitch",
-                receiveState = {
+                stateChannelFactory = {
                     state
                 }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
-
                 },
             )
             Switch(
                 id = "superSwitch2",
-                receiveState = {
+                stateChannelFactory = {
                     state
                 }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
-
                 },
             )
         }
@@ -73,11 +71,10 @@ class KonstantinServerTest {
         val config = Configuration {
             Switch(
                 id = "superSwitch",
-                receiveState = {
+                stateChannelFactory = {
                     state
                 }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
-
                 },
             )
         }
@@ -118,7 +115,7 @@ class KonstantinServerTest {
         val config = Configuration {
             Switch(
                 id = "superSwitch",
-                receiveState = {
+                stateChannelFactory = {
                     state
                 }.toStateChanelFactory(Duration.ofMillis(30)),
                 updateState = {
@@ -138,7 +135,7 @@ class KonstantinServerTest {
                 withTimeout(1000) {
                     channel.receive() shouldBe Thing.Switch.SwitchState.On
                 }
-                it.updateState(Thing.Switch("superSwitch",Thing.Switch.SwitchState.Off))
+                it.updateState(Thing.Switch("superSwitch", Thing.Switch.SwitchState.Off))
                 withTimeout(100) {
                     channel.receive() shouldBe Thing.Switch.SwitchState.Off
                 }
